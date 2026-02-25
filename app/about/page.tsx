@@ -1,282 +1,336 @@
-import { Metadata } from "next";
-import {
-  Users, Clock, Trophy, Award, Target, Zap,
-  Globe, BarChart3, TrendingUp, Shield, Heart,
-  Lightbulb, ArrowRight, CheckCircle2, Star
-} from "lucide-react";
+// app/about/page.tsx
+import type { Metadata } from "next";
 import Link from "next/link";
+import {
+  Award, Users, TrendingUp, Shield, Target,
+  CheckCircle, ArrowRight, Phone, ChevronRight,
+  Zap, Globe, Heart, Star, BarChart3, Lightbulb
+} from "lucide-react";
 
-// ─── Metadata ─────────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: "About Rigveda Ads — Google Ads & Performance Marketing Agency India",
+  title: "About Us | Rigveda Ads Agency | Digital Marketing Experts Delhi",
   description:
-    "Learn about Rigveda Ads, a certified Google Ads and performance marketing agency with 8+ years of experience delivering data-driven campaigns with proven ROI across India and internationally.",
-  keywords: [
-    "about Rigveda Ads",
-    "Google Ads agency India",
-    "performance marketing company",
-    "PPC agency Delhi",
-    "digital marketing agency India",
-    "certified Google partner",
-  ],
+    "Learn about Rigveda Ads — a performance-driven digital marketing agency with 8+ years of experience, ₹50Cr+ ad spend managed, and 500+ clients served across India and internationally.",
+  keywords:
+    "about rigveda ads, digital marketing agency Delhi, performance marketing agency, google ads agency India",
 };
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-const stats = [
-  { icon: Users,    number: "126+",  label: "Happy Clients" },
-  { icon: Trophy,   number: "8+",    label: "Years Experience" },
-  { icon: BarChart3,number: "500+",  label: "Campaigns Managed" },
-  { icon: TrendingUp,number: "300%", label: "Average Client ROI" },
-];
+const PHONE      = "+917840000618";
+const PHONE_DISP = "+91 78400 00618";
 
-const timeline = [
-  {
-    year: "2016",
-    title: "Agency Founded",
-    description:
-      "Rigveda Ads was founded with a clear mission — to bring honest, data-driven Google Ads management to Indian businesses tired of agencies with zero accountability.",
-  },
-  {
-    year: "2018",
-    title: "Google Certification",
-    description:
-      "Achieved Google Partner certification. Expanded service offering to include Facebook Ads, SEO and brand bidding campaign management.",
-  },
-  {
-    year: "2020",
-    title: "Performance Marketing Focus",
-    description:
-      "Pivoted to full-funnel performance marketing — combining PPC, landing page CRO and analytics to deliver measurable end-to-end ROI for clients.",
-  },
-  {
-    year: "2022",
-    title: "International Expansion",
-    description:
-      "Launched international campaign management for clients targeting US, UK, UAE, Canada and Singapore markets. 50+ global campaigns delivered.",
-  },
-  {
-    year: "2025",
-    title: "300%+ Average ROI",
-    description:
-      "Crossed 500 campaigns managed and 126+ active clients across all major sectors. Recognised as a leading performance marketing agency in North India.",
-  },
+// ─── Data ──────────────────────────────────────────────────────
+const stats = [
+  { value: "8+",     label: "Years Experience",     sub: "In performance marketing" },
+  { value: "500+",   label: "Clients Served",       sub: "Across India & globally" },
+  { value: "₹50Cr+", label: "Ad Spend Managed",     sub: "Across all channels" },
+  { value: "300%",   label: "Average ROI",          sub: "Delivered to clients" },
 ];
 
 const values = [
   {
     icon: Target,
-    title: "Results First",
-    description:
-      "Every decision we make is tied to your business outcomes. We optimise for conversions, leads and revenue — not vanity metrics.",
+    title: "ROI Obsessed",
+    desc: "Every decision — channel, creative, bid — is made with one question in mind: does this generate more return for our client?",
+    color: "text-violet-500",
+    bg: "bg-violet-500/10 group-hover:bg-violet-500/20",
   },
   {
     icon: Shield,
-    title: "Full Transparency",
-    description:
-      "Weekly reports, live dashboards, zero hidden fees. You always know exactly where every rupee of your ad budget is going.",
+    title: "Radical Transparency",
+    desc: "You own your accounts, see every rupee spent, and get weekly reports in plain English — no smoke, no mirrors.",
+    color: "text-blue-500",
+    bg: "bg-blue-500/10 group-hover:bg-blue-500/20",
   },
   {
     icon: Lightbulb,
-    title: "Continuous Innovation",
-    description:
-      "Digital advertising evolves daily. We stay ahead of algorithm changes, beta features and new ad formats so you always have the edge.",
+    title: "Always Testing",
+    desc: "We run structured experiments across creatives, audiences, and channels every week. Standing still means falling behind.",
+    color: "text-amber-500",
+    bg: "bg-amber-500/10 group-hover:bg-amber-500/20",
   },
   {
     icon: Heart,
-    title: "Long-term Partnership",
-    description:
-      "We don't chase quick wins. We build sustainable ad systems that grow your business month over month, year over year.",
-  },
-];
-
-const serviceAreas = [
-  {
-    icon: Target,
-    title: "Paid Advertising",
-    description:
-      "Google Search, Display, Shopping, YouTube, Facebook, Instagram and LinkedIn ads — managed end-to-end for maximum ROI.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Performance Marketing",
-    description:
-      "Full-funnel CPA/CPS/CPL campaigns with aggressive A/B testing, bid optimisation and conversion tracking at every stage.",
+    title: "Client First",
+    desc: "A named strategist on every account. No offshore handoffs. No ticket queues. Just real people who care about your growth.",
+    color: "text-pink-500",
+    bg: "bg-pink-500/10 group-hover:bg-pink-500/20",
   },
   {
     icon: Globe,
-    title: "International Campaigns",
-    description:
-      "Geo-targeted, localised campaigns for US, UK, UAE, Canada and Singapore markets with proven cross-border strategies.",
+    title: "Full Funnel",
+    desc: "We don't just run ads — we think across awareness, consideration, and conversion to build sustainable growth engines.",
+    color: "text-emerald-500",
+    bg: "bg-emerald-500/10 group-hover:bg-emerald-500/20",
+  },
+  {
+    icon: TrendingUp,
+    title: "Long-term Thinking",
+    desc: "Quick wins are great. But we always build toward compounding results that grow your business for years, not weeks.",
+    color: "text-orange-500",
+    bg: "bg-orange-500/10 group-hover:bg-orange-500/20",
   },
 ];
 
-const expertise = [
-  "Google Search & Display Network",
-  "YouTube Video Advertising",
-  "Facebook & Instagram Ads",
-  "Brand Protection & Competitor Bidding",
-  "Conversion Rate Optimisation (CRO)",
-  "Search Engine Optimisation (SEO)",
-  "Analytics, Tracking & Reporting",
-  "International Market Campaigns",
-  "Landing Page Design & Development",
-  "E-commerce Performance Marketing",
+const milestones = [
+  { year: "2016", title: "Founded in Delhi",          desc: "Started as a boutique Google Ads consultancy serving local Delhi businesses." },
+  { year: "2018", title: "SEO Practice Launched",     desc: "Expanded into technical SEO and content marketing — serving national brands." },
+  { year: "2020", title: "Crossed 200 Clients",       desc: "Scaled the team and crossed ₹10Cr in annual ad spend under management." },
+  { year: "2022", title: "Went International",        desc: "Onboarded first UK and UAE clients. Added LinkedIn and YouTube Ads practice." },
+  { year: "2024", title: "₹50Cr+ Managed",            desc: "Full-service agency with 5 specialised practices and a dedicated team of 20+." },
+  { year: "2025", title: "Web Dev Practice Added",    desc: "Launched Next.js and WordPress development to deliver end-to-end digital solutions." },
 ];
 
-const industries = [
-  "E-commerce",       "Healthcare",     "Real Estate",    "Education",
-  "Finance & NBFC",   "SaaS & Tech",    "Hospitality",    "Legal Services",
-  "Manufacturing",    "Retail & D2C",   "Startups",       "NGOs & Trusts",
+const team = [
+  {
+    name: "Vikram Sharma",
+    role: "Founder & Head of Strategy",
+    exp: "8+ years · Ex-Google Partner",
+    initials: "VS",
+    color: "from-violet-500 to-indigo-600",
+  },
+  {
+    name: "Priya Nair",
+    role: "Head of SEO & Content",
+    exp: "7 years · 100+ SEO Projects",
+    initials: "PN",
+    color: "from-emerald-500 to-teal-600",
+  },
+  {
+    name: "Arjun Mehta",
+    role: "Head of Paid Social",
+    exp: "6 years · Meta & LinkedIn Certified",
+    initials: "AM",
+    color: "from-pink-500 to-rose-600",
+  },
+  {
+    name: "Riya Kapoor",
+    role: "Head of Web Development",
+    exp: "5 years · Next.js & WordPress Expert",
+    initials: "RK",
+    color: "from-orange-500 to-amber-600",
+  },
 ];
 
-// ─── Reusable Label ───────────────────────────────────────────────────────────
-const Label = ({ text }: { text: string }) => (
-  <div className="inline-flex items-center gap-2 mb-4">
-    <span className="w-4 h-4 rounded-full border-2 border-violet-500 flex items-center justify-center">
-      <span className="w-1.5 h-1.5 bg-violet-500 rounded-full" />
-    </span>
-    <span className="text-violet-400 font-semibold text-sm">{text}</span>
-  </div>
-);
+const services = [
+  { name: "Google Ads",           href: "/services/google-ads" },
+  { name: "SEO",                  href: "/services/seo" },
+  { name: "Social Media Ads",     href: "/services/social-media-ads" },
+  { name: "Performance Marketing",href: "/services/performance-marketing" },
+  { name: "Web Development",      href: "/services/website-development" },
+  { name: "Brand Bidding",        href: "/services/brand-bidding" },
+];
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
+const certifications = [
+  "Google Ads Certified Partner",
+  "Google Analytics 4 Certified",
+  "Meta Blueprint Certified",
+  "LinkedIn Marketing Certified",
+  "HubSpot Content Marketing",
+  "Semrush SEO Certified",
+];
+
+const faqs = [
+  {
+    q: "Where is Rigveda Ads based and do you work with clients outside Delhi?",
+    a: "We're headquartered in Delhi, India, but operate as a remote-first agency. We serve clients across India — Mumbai, Bangalore, Hyderabad, Pune — and internationally in the UK, UAE, and beyond. All engagements are managed remotely with weekly calls and real-time reporting.",
+  },
+  {
+    q: "How is Rigveda Ads different from other digital marketing agencies?",
+    a: "Three things set us apart: first, every client gets a named senior strategist — not a junior account manager. Second, we obsess over attribution — you always know which channel, campaign, and ad drove each conversion. Third, we have no lock-in contracts — we earn your business every month.",
+  },
+  {
+    q: "Do you work with early-stage startups or only established businesses?",
+    a: "Both. We've worked with bootstrapped startups on ₹20,000/month budgets and enterprise brands spending ₹50L+/month. Our recommendations are always calibrated to your current stage, budget, and goals — not a one-size-fits-all playbook.",
+  },
+  {
+    q: "Can I see case studies or speak to existing clients before signing up?",
+    a: "Absolutely. During our free discovery call, we share relevant case studies for your industry and budget range. We can also arrange client reference calls for larger engagements. We believe in full transparency before any commitment.",
+  },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Rigveda Ads Agency Pvt. Ltd.",
+  url: "https://rigvedaadds.com",
+  foundingDate: "2016",
+  description: "Performance-driven digital marketing agency based in Delhi, India.",
+  areaServed: ["India", "UK", "UAE"],
+};
+
 export default function AboutPage() {
   return (
-    <div className="bg-[#0B0B0F] text-white overflow-x-hidden">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-      {/* ════════════ PAGE HERO */}
-      <section className="relative pt-28 pb-20 overflow-hidden">
+      {/* ── HERO ─────────────────────────────────────────────── */}
+      <section className="relative bg-white dark:bg-[#0B0B0F] pt-10 pb-0 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-20 right-0 w-[600px] h-[600px] bg-violet-700/20 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[300px] bg-purple-800/10 rounded-full blur-[80px]" />
-          <div
-            className="absolute inset-0 opacity-[0.04]"
-            style={{ backgroundImage: "radial-gradient(circle, #8B5CF6 1px, transparent 1px)", backgroundSize: "44px 44px" }}
-          />
+          <div className="absolute -top-20 -right-20 w-[400px] h-[400px] bg-violet-500/10 dark:bg-violet-600/15 rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 -left-10 w-[300px] h-[300px] bg-indigo-600/8 dark:bg-indigo-800/12 rounded-full blur-[80px]" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-2 text-xs text-white/30 mb-8">
-            <Link href="/" className="hover:text-violet-400 transition-colors">Home</Link>
-            <span>/</span>
-            <span className="text-white/60">About Us</span>
+          <nav className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-white/35 mb-6 flex-wrap">
+            <Link href="/" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Home</Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-gray-600 dark:text-white/60">About Us</span>
           </nav>
 
-          <div className="max-w-3xl">
-            <Label text="Our Story" />
-            <h1 className="text-5xl lg:text-7xl font-black leading-[1.03] mb-6 tracking-tight">
-              <span className="text-white">About </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-300 to-pink-300">
-                Rigveda Ads
+          <div className="max-w-3xl pb-14 lg:pb-16" style={{ animation: "heroFadeIn 0.7s ease both" }}>
+            <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-1.5 mb-5">
+              <Zap className="w-3.5 h-3.5 text-violet-500" />
+              <span className="text-violet-700 dark:text-violet-300 text-xs font-semibold">
+                Founded 2016 · Delhi, India · Google Certified Partner
+              </span>
+            </div>
+
+            <h1 className="text-[36px] sm:text-5xl lg:text-[56px] font-black leading-[1.06] tracking-tight mb-5">
+              <span className="text-gray-900 dark:text-white">We are a Team That </span>
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500">
+                Lives for Your ROI
               </span>
             </h1>
-            <p className="text-xl text-white/50 leading-relaxed max-w-2xl">
-              A certified Google Ads &amp; performance marketing agency delivering data-driven
-              campaigns with transparent reporting and proven ROI — for every type of business,
-              in every market.
+
+            <p className="text-gray-500 dark:text-white/55 text-base sm:text-lg leading-relaxed mb-7 max-w-xl">
+              Rigveda Ads is a performance-driven digital marketing agency
+              founded in Delhi in 2016. We have managed{" "}
+              <strong className="text-gray-900 dark:text-white">₹50Cr+ in ad spend</strong>,
+              served <strong className="text-gray-900 dark:text-white">500+ clients</strong>, and
+              built a reputation for one thing: measurable results with zero BS.
             </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 mb-7">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold px-7 py-4 rounded-2xl hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-xl shadow-violet-500/25 text-sm group"
+              >
+                Work With Us
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <a
+                href={`tel:${PHONE}`}
+                className="inline-flex items-center justify-center gap-2 border border-gray-200 dark:border-white/10 text-gray-800 dark:text-white font-semibold px-7 py-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-sm"
+              >
+                <Phone className="w-4 h-4 text-violet-500" /> {PHONE_DISP}
+              </a>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              {["No Lock-in Contracts", "Dedicated Strategist", "Full Account Ownership", "Weekly Reporting"].map((b) => (
+                <div key={b} className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-white/50 font-medium">
+                  <CheckCircle className="w-3.5 h-3.5 text-green-500 flex-shrink-0" /> {b}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full overflow-hidden leading-none">
+          <svg viewBox="0 0 1440 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-7">
+            <path d="M0,18 C360,36 1080,0 1440,18 L1440,36 L0,36 Z" className="fill-gray-50 dark:fill-[#0F0F14]" />
+          </svg>
+        </div>
+      </section>
+
+      {/* ── STATS ────────────────────────────────────────────── */}
+      <section className="bg-gray-50 dark:bg-[#0F0F14] py-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {stats.map(({ value, label, sub }, i) => (
+              <div
+                key={i}
+                className="bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl p-5 text-center hover:border-violet-400/40 hover:-translate-y-0.5 transition-all"
+                style={{ animation: `fadeSlideUp 0.5s ease ${i * 0.07}s both` }}
+              >
+                <div className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mb-1">{value}</div>
+                <div className="text-sm font-bold text-gray-700 dark:text-white/80">{label}</div>
+                <div className="text-xs text-gray-400 dark:text-white/35 mt-0.5">{sub}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ════════════ COMPANY OVERVIEW */}
-      <section className="py-24">
+      {/* ── STORY ────────────────────────────────────────────── */}
+      <section className="py-14 lg:py-20 bg-white dark:bg-[#0B0B0F]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <Label text="Who We Are" />
-              <h2 className="text-3xl lg:text-5xl font-black leading-tight mb-8">
-                <span className="text-white">Performance Marketing </span>
-                <span className="text-white/20">Done Right</span>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div style={{ animation: "fadeSlideUp 0.6s ease both" }}>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 dark:text-white mb-5">
+                Built on a Simple{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-indigo-500">
+                  Belief
+                </span>
               </h2>
-
-              <div className="space-y-5 text-white/55 leading-relaxed">
+              <div className="space-y-4 text-gray-500 dark:text-white/55 text-sm sm:text-base leading-relaxed">
                 <p>
-                  Rigveda Ads is a certified Google Ads and performance marketing agency founded
-                  with one goal — to help Indian businesses grow profitably through digital advertising.
-                  We combine deep platform expertise with data-driven strategy to deliver campaigns
-                  that produce real, measurable business results.
+                  Rigveda Ads was founded in 2016 by a team frustrated with one
+                  thing: digital marketing agencies that prioritised impressions
+                  over impact. We built this agency around the opposite belief —
+                  that every rupee spent should be traceable to revenue.
                 </p>
                 <p>
-                  Our clients range from early-stage startups to established enterprises across
-                  e-commerce, healthcare, real estate, SaaS, finance and more. Whether you need
-                  pan-India coverage or targeted international campaigns in US, UK or UAE, we have
-                  the experience to deliver.
+                  We started with Google Ads for Delhi businesses. Over 8 years,
+                  we have grown into a full-service performance agency — covering
+                  SEO, Social Media Ads, Web Development, and Performance
+                  Marketing — while staying obsessed with the same core question:{" "}
+                  <strong className="text-gray-900 dark:text-white">
+                    what actually moves the needle?
+                  </strong>
                 </p>
                 <p>
-                  We are a team of young, certified professionals committed to transparency, continuous
-                  optimisation, and long-term client partnerships. No lock-in contracts, no vanity
-                  metrics — just results you can measure.
+                  Today we serve 500+ clients across India, UK, and UAE. Our
+                  team of 20+ certified specialists manages ₹50Cr+ in annual
+                  ad spend — and counts ourselves as genuine growth partners,
+                  not vendors.
                 </p>
               </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                {services.map(({ name, href }) => (
+                  <Link
+                    key={name}
+                    href={href}
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-violet-600 dark:text-violet-400 bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/20 px-3 py-1.5 rounded-full transition-colors"
+                  >
+                    {name} <ChevronRight className="w-3 h-3" />
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                {["Google Certified Partner", "8+ Years Experience", "500+ Campaigns", "Pan-India + Global"].map(b => (
-                  <div key={b} className="flex items-center gap-2 bg-white/5 border border-white/8 rounded-full px-4 py-2">
-                    <CheckCircle2 className="w-4 h-4 text-violet-400 flex-shrink-0" />
-                    <span className="text-white/70 text-sm font-medium">{b}</span>
+            {/* Certifications */}
+            <div className="bg-gray-50 dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl p-6 sm:p-8"
+              style={{ animation: "fadeSlideUp 0.6s ease 0.1s both" }}>
+              <h3 className="font-black text-gray-900 dark:text-white text-lg mb-5 flex items-center gap-2">
+                <Award className="w-5 h-5 text-violet-500" /> Certifications & Credentials
+              </h3>
+              <div className="space-y-3 mb-6">
+                {certifications.map((cert, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-7 h-7 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-sm shadow-violet-500/20">
+                      <CheckCircle className="w-3.5 h-3.5 text-white" />
+                    </div>
+                    <span className="text-sm text-gray-700 dark:text-white/75 font-medium">{cert}</span>
                   </div>
                 ))}
               </div>
-
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 mt-8 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold px-8 py-4 rounded-2xl hover:opacity-90 transition-all shadow-lg shadow-violet-500/25"
-              >
-                Work With Us <ArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-
-            {/* Stats grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {stats.map(({ icon: Icon, number, label }, i) => (
-                <div
-                  key={i}
-                  className="bg-[#13131A] border border-white/5 rounded-2xl p-7 hover:border-violet-500/30 hover:-translate-y-1 transition-all duration-300 group"
-                >
-                  <div className="w-11 h-11 bg-violet-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-violet-500/20 transition-colors">
-                    <Icon className="w-5 h-5 text-violet-400" />
-                  </div>
-                  <div className="text-4xl font-black text-white mb-1">{number}</div>
-                  <div className="text-white/40 text-sm">{label}</div>
+              <div className="pt-5 border-t border-gray-200 dark:border-white/[0.06]">
+                <div className="flex items-center gap-2 mb-2">
+                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                  <span className="text-xs font-bold text-gray-900 dark:text-white ml-1">5.0</span>
+                  <span className="text-xs text-gray-400 dark:text-white/40">· 120+ Google Reviews</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════ MISSION & VISION */}
-      <section className="py-20 bg-[#0F0F14]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Mission */}
-            <div className="relative bg-[#13131A] border border-white/5 rounded-2xl p-8 overflow-hidden group hover:border-violet-500/30 transition-all">
-              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-violet-500 to-purple-600 rounded-l-2xl" />
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-violet-500/50 to-transparent" />
-              <div className="pl-4">
-                <p className="text-xs font-bold text-violet-400 uppercase tracking-widest mb-4">Our Mission</p>
-                <h3 className="text-2xl font-black text-white mb-4">Why We Exist</h3>
-                <p className="text-white/50 leading-relaxed">
-                  To deliver honest, transparent and results-focused digital advertising that empowers
-                  businesses to grow profitably. We exist to be the agency we wished existed when we
-                  started — no fluff, no jargon, just performance.
-                </p>
-              </div>
-            </div>
-
-            {/* Vision */}
-            <div className="relative bg-[#13131A] border border-white/5 rounded-2xl p-8 overflow-hidden group hover:border-violet-500/30 transition-all">
-              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-pink-500 rounded-l-2xl" />
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-purple-500/50 to-transparent" />
-              <div className="pl-4">
-                <p className="text-xs font-bold text-purple-400 uppercase tracking-widest mb-4">Our Vision</p>
-                <h3 className="text-2xl font-black text-white mb-4">Where We are Going</h3>
-                <p className="text-white/50 leading-relaxed">
-                  To be India most trusted performance marketing agency — recognised for delivering
-                  measurable growth, building long-term partnerships, and pioneering data-driven
-                  advertising strategies that set the benchmark for the industry.
+                <p className="text-xs text-gray-400 dark:text-white/40 italic">
+                  Rigveda Ads tripled our leads in 3 months — with the same budget. — Client, E-commerce
                 </p>
               </div>
             </div>
@@ -284,144 +338,67 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ════════════ SERVICE AREAS */}
-      <section className="py-24">
+      {/* ── VALUES ───────────────────────────────────────────── */}
+      <section className="py-14 bg-gray-50 dark:bg-[#0F0F14]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <Label text="What We Do" />
-            <h2 className="text-3xl lg:text-5xl font-black">
-              <span className="text-white">Our Core </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-300">
-                Capabilities
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 dark:text-white mb-2">
+              What We{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-indigo-500">
+                Stand For
+              </span>
+            </h2>
+            <p className="text-gray-400 dark:text-white/40 text-sm max-w-md mx-auto">
+              Six values that guide every campaign, every report, every client conversation.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {values.map(({ icon: Icon, title, desc, color, bg }, i) => (
+              <div
+                key={i}
+                className="bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl p-5 hover:border-violet-400/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-violet-500/5 transition-all duration-300 group"
+                style={{ animation: `fadeSlideUp 0.6s ease ${i * 0.07}s both` }}
+              >
+                <div className={`w-9 h-9 ${bg} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-all`}>
+                  <Icon className={`w-4 h-4 ${color}`} />
+                </div>
+                <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-1.5">{title}</h3>
+                <p className="text-gray-400 dark:text-white/40 text-xs leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TIMELINE ─────────────────────────────────────────── */}
+      <section className="py-14 lg:py-20 bg-white dark:bg-[#0B0B0F]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">
+              Our{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-indigo-500">
+                Journey
               </span>
             </h2>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-5 mb-14">
-            {serviceAreas.map(({ icon: Icon, title, description }, i) => (
+          <div className="space-y-3">
+            {milestones.map(({ year, title, desc }, i) => (
               <div
                 key={i}
-                className="bg-[#13131A] border border-white/5 rounded-2xl p-8 text-center hover:border-violet-500/30 hover:-translate-y-1.5 transition-all duration-300 group"
+                className="flex gap-5 bg-gray-50 dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl p-5 hover:border-violet-400/30 transition-all group"
+                style={{ animation: `fadeSlideUp 0.5s ease ${i * 0.08}s both` }}
               >
-                <div className="w-14 h-14 bg-gradient-to-br from-violet-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform shadow-lg shadow-violet-500/20">
-                  <Icon className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-xl font-black text-white mb-3">{title}</h3>
-                <p className="text-white/45 text-sm leading-relaxed">{description}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Expertise pills */}
-          <div className="bg-[#13131A] border border-white/5 rounded-2xl p-8">
-            <p className="text-xs font-bold text-violet-400 uppercase tracking-widest text-center mb-6">
-              Expertise Areas
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              {expertise.map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-2 bg-white/5 border border-white/8 hover:border-violet-500/30 hover:bg-violet-500/5 rounded-full px-4 py-2 transition-all cursor-default"
-                >
-                  <Zap className="w-3.5 h-3.5 text-violet-400 flex-shrink-0" />
-                  <span className="text-white/60 text-sm font-medium">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════ VALUES */}
-      <section className="py-24 bg-[#0F0F14]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <Label text="Our Values" />
-            <h2 className="text-3xl lg:text-5xl font-black text-white">
-              What Drives Us
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {values.map(({ icon: Icon, title, description }, i) => (
-              <div
-                key={i}
-                className="bg-[#13131A] border border-white/5 rounded-2xl p-6 hover:border-violet-500/30 transition-all duration-300 group"
-              >
-                <div className="w-11 h-11 bg-violet-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-violet-500/20 transition-colors">
-                  <Icon className="w-5 h-5 text-violet-400" />
-                </div>
-                <h3 className="font-black text-white text-lg mb-2">{title}</h3>
-                <p className="text-white/45 text-sm leading-relaxed">{description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════ INDUSTRIES */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <Label text="Industries" />
-            <h2 className="text-3xl lg:text-5xl font-black text-white mb-3">
-              Sectors We Serve
-            </h2>
-            <p className="text-white/40 max-w-lg mx-auto text-sm">
-              We have delivered profitable campaigns across every major industry in India and internationally.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {industries.map((industry, i) => (
-              <div
-                key={i}
-                className="bg-[#13131A] border border-white/5 rounded-xl p-4 text-center hover:border-violet-500/30 hover:-translate-y-0.5 hover:bg-[#16161F] transition-all duration-300 cursor-default group"
-              >
-                <span className="w-2 h-2 bg-violet-500/50 rounded-full block mx-auto mb-2 group-hover:bg-violet-400 transition-colors" />
-                <span className="text-white/55 text-xs font-semibold group-hover:text-white/80 transition-colors">
-                  {industry}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════ TIMELINE */}
-      <section className="py-24 bg-[#0F0F14] relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-violet-800/8 rounded-full blur-[120px]" />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <Label text="Our Journey" />
-            <h2 className="text-3xl lg:text-5xl font-black">
-              <span className="text-white">8 Years of </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-300">
-                Growth
-              </span>
-            </h2>
-          </div>
-
-          <div className="max-w-3xl mx-auto">
-            {timeline.map((item, i) => (
-              <div key={i} className="flex gap-6 mb-8 last:mb-0 group">
-                {/* Year bubble + line */}
                 <div className="flex flex-col items-center flex-shrink-0">
-                  <div className="w-16 h-16 bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/20 group-hover:scale-105 transition-transform">
-                    <span className="text-white font-black text-sm">{item.year}</span>
+                  <div className="w-14 h-9 bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-xl flex items-center justify-center font-black text-sm shadow-md shadow-violet-500/20 group-hover:scale-105 transition-transform">
+                    {year}
                   </div>
-                  {i < timeline.length - 1 && (
-                    <div className="w-px flex-1 bg-gradient-to-b from-violet-500/30 to-transparent mt-3 min-h-[32px]" />
+                  {i < milestones.length - 1 && (
+                    <div className="w-px flex-1 bg-gradient-to-b from-violet-400/30 to-transparent mt-2 min-h-[16px]" />
                   )}
                 </div>
-
-                {/* Content */}
-                <div className="bg-[#13131A] border border-white/5 rounded-2xl p-6 flex-1 hover:border-violet-500/20 transition-all mb-2">
-                  <h3 className="text-lg font-black text-white mb-2">{item.title}</h3>
-                  <p className="text-white/45 text-sm leading-relaxed">{item.description}</p>
+                <div className="pt-1">
+                  <h3 className="font-bold text-gray-900 dark:text-white text-sm mb-1">{title}</h3>
+                  <p className="text-gray-500 dark:text-white/45 text-xs sm:text-sm leading-relaxed">{desc}</p>
                 </div>
               </div>
             ))}
@@ -429,107 +406,112 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ════════════ LEADERSHIP */}
-      <section className="py-24">
+      {/* ── TEAM ─────────────────────────────────────────────── */}
+      <section className="py-14 bg-gray-50 dark:bg-[#0F0F14]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <Label text="Leadership" />
-            <h2 className="text-3xl lg:text-5xl font-black text-white">The People Behind It</h2>
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mb-2">
+              The{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-indigo-500">
+                Core Team
+              </span>
+            </h2>
+            <p className="text-gray-400 dark:text-white/40 text-sm max-w-md mx-auto">
+              Senior specialists — not juniors — on every account.
+            </p>
           </div>
-
-          <div className="max-w-2xl mx-auto">
-            <div className="relative bg-[#13131A] border border-white/5 rounded-3xl p-10 text-center overflow-hidden">
-              {/* Glow */}
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
-              <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-60 h-60 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
-
-              <div className="relative z-10">
-                <div className="w-24 h-24 bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl shadow-violet-500/25">
-                  <span className="text-white font-black text-2xl">RA</span>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {team.map(({ name, role, exp, initials, color }, i) => (
+              <div
+                key={i}
+                className="bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl p-5 hover:border-violet-400/30 hover:-translate-y-1 transition-all duration-300 group text-center"
+                style={{ animation: `fadeSlideUp 0.6s ease ${i * 0.08}s both` }}
+              >
+                <div className={`w-14 h-14 bg-gradient-to-br ${color} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+                  <span className="text-white font-black text-lg">{initials}</span>
                 </div>
-
-                <h3 className="text-2xl font-black text-white mb-1">Founder, Rigveda Ads</h3>
-                <p className="text-violet-400 font-semibold text-sm mb-6">
-                  Google Certified Ads Expert · Performance Marketing Strategist
-                </p>
-
-                <p className="text-white/50 leading-relaxed text-sm mb-6 max-w-lg mx-auto">
-                  With over 8 years of hands-on experience in Google Ads, performance marketing
-                  and international campaign management, the founder of Rigveda Ads has led
-                  500+ campaigns across diverse industries — delivering transparent, ROI-focused
-                  digital advertising for clients across India and globally.
-                </p>
-
-                <div className="flex flex-wrap justify-center gap-3">
-                  {["Google Ads Certified", "Meta Blueprint", "Analytics Expert", "CRO Specialist"].map(b => (
-                    <div key={b} className="flex items-center gap-1.5 bg-violet-500/10 border border-violet-500/20 rounded-full px-3 py-1.5">
-                      <Star className="w-3 h-3 text-violet-400 fill-violet-400" />
-                      <span className="text-violet-300 text-xs font-semibold">{b}</span>
-                    </div>
-                  ))}
+                <h3 className="font-black text-gray-900 dark:text-white text-sm mb-0.5">{name}</h3>
+                <p className="text-gray-500 dark:text-white/50 text-xs mb-2">{role}</p>
+                <div className="inline-flex items-center gap-1 bg-gray-100 dark:bg-white/[0.05] px-2.5 py-1 rounded-full">
+                  <BarChart3 className="w-3 h-3 text-violet-500" />
+                  <span className="text-[11px] font-medium text-gray-500 dark:text-white/40">{exp}</span>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
+          <p className="text-center text-xs text-gray-400 dark:text-white/35 mt-6">
+            + 16 more specialists across PPC, SEO, Content, Social, and Development
+          </p>
+        </div>
+      </section>
 
-          {/* Why Work With Us card */}
-          <div className="mt-8 max-w-2xl mx-auto">
-            <div className="bg-gradient-to-r from-violet-600/10 to-purple-600/10 border border-violet-500/15 rounded-2xl p-8 text-center">
-              <h3 className="text-xl font-black text-white mb-3">Why Work With Rigveda Ads?</h3>
-              <p className="text-white/45 text-sm leading-relaxed max-w-xl mx-auto">
-                We treat your ad budget like our own. Every campaign gets daily monitoring,
-                aggressive optimisation and a weekly report — so you always know your numbers.
-                No lock-in, no fluff, just performance.
-              </p>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 mt-6 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition-all shadow-lg shadow-violet-500/25 text-sm"
+      {/* ── FAQs ─────────────────────────────────────────────── */}
+      <section className="py-14 bg-white dark:bg-[#0B0B0F]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white text-center mb-8">
+            Common Questions
+          </h2>
+          <div className="space-y-3">
+            {faqs.map(({ q, a }, i) => (
+              <details
+                key={i}
+                className="group bg-gray-50 dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl overflow-hidden"
+                style={{ animation: `fadeSlideUp 0.5s ease ${i * 0.07}s both` }}
               >
-                Start with a Free Audit <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
+                <summary className="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-gray-100 dark:hover:bg-white/[0.03] transition-colors list-none">
+                  <span className="text-sm font-semibold text-gray-800 dark:text-white/90 pr-4">{q}</span>
+                  <span className="w-6 h-6 flex-shrink-0 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/[0.1] text-gray-400 group-open:border-violet-500 group-open:text-violet-500 group-open:bg-violet-500/10 transition-all font-bold text-base">
+                    <span className="group-open:hidden">+</span>
+                    <span className="hidden group-open:block">−</span>
+                  </span>
+                </summary>
+                <div className="px-5 pb-5 pt-1 text-gray-500 dark:text-white/50 text-sm leading-relaxed border-t border-gray-100 dark:border-white/[0.05]">
+                  {a}
+                </div>
+              </details>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ════════════ BOTTOM CTA */}
-      <section className="py-20 relative overflow-hidden bg-[#0F0F14]">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-900/20 to-purple-900/15" />
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{ backgroundImage: "radial-gradient(circle, #8B5CF6 1px, transparent 1px)", backgroundSize: "44px 44px" }}
-          />
+      {/* ── CTA ──────────────────────────────────────────────── */}
+      <section className="py-14 lg:py-20 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-900/40 to-indigo-900/35" />
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
+          <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
         </div>
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className="text-4xl lg:text-5xl font-black mb-4">
-            Ready to{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-300">
-              Scale Your Ads?
+        <div
+          className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"
+          style={{ animation: "fadeSlideUp 0.6s ease both" }}
+        >
+          <h2 className="text-3xl sm:text-4xl font-black text-white mb-3">
+            Ready to Work With a{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-indigo-200">
+              Team That Delivers?
             </span>
           </h2>
-          <p className="text-white/45 text-lg mb-8 max-w-xl mx-auto">
-            Get a free, no-obligation Google Ads audit. We will show you exactly what is
-            working, what is not, and how to fix it.
+          <p className="text-white/60 text-sm mb-7 max-w-md mx-auto">
+            Free audit — no obligation. We will review your current setup and
+            show you exactly where you are leaving growth on the table.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-black px-10 py-5 rounded-2xl hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-2xl shadow-violet-500/30 text-lg"
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-black px-8 py-4 rounded-2xl hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-xl shadow-violet-500/25 text-sm group"
             >
-              Get Free Audit <ArrowRight className="w-5 h-5" />
+              Get Free Audit
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link
-              href="/services"
-              className="inline-flex items-center justify-center gap-2 border border-white/12 text-white font-bold px-10 py-5 rounded-2xl hover:bg-white/5 transition-all text-lg"
+            <a
+              href={`tel:${PHONE}`}
+              className="inline-flex items-center justify-center gap-2 border border-white/20 text-white font-bold px-8 py-4 rounded-2xl hover:bg-white/10 transition-all text-sm"
             >
-              Explore Services
-            </Link>
+              <Phone className="w-4 h-4" /> {PHONE_DISP}
+            </a>
           </div>
         </div>
       </section>
-
-    </div>
+    </>
   );
 }

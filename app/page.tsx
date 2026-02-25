@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import {
   ArrowRight, Phone, Play, CheckCircle2, Star, Target, Search,
   Share2, Code2, TrendingUp, BarChart3, Megaphone, Globe,
-  ChevronRight, Calendar, BookOpen, Quote, Zap, X
+  ChevronRight, Calendar, BookOpen, Quote, Zap, X, Sparkles
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -35,7 +35,7 @@ function useCountUp(end: number, duration = 2400, trigger = false) {
   return count;
 }
 
-function useInView(threshold = 0.15) {
+function useInView(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
@@ -49,15 +49,65 @@ function useInView(threshold = 0.15) {
   return { ref, inView };
 }
 
+// ─── Animation Primitives ─────────────────────────────────────────────────────
 function FadeUp({ children, delay = 0, className = "" }: {
   children: React.ReactNode; delay?: number; className?: string;
 }) {
-  const { ref, inView } = useInView(0.1);
+  const { ref, inView } = useInView(0.08);
   return (
     <div ref={ref} className={className} style={{
       opacity: inView ? 1 : 0,
-      transform: inView ? "translateY(0)" : "translateY(32px)",
-      transition: `opacity 0.7s ease ${delay}ms, transform 0.7s ease ${delay}ms`,
+      transform: inView ? "translateY(0px)" : "translateY(44px)",
+      transition: `opacity 0.85s cubic-bezier(0.22,1,0.36,1) ${delay}ms,
+                   transform 0.85s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+function FadeLeft({ children, delay = 0, className = "" }: {
+  children: React.ReactNode; delay?: number; className?: string;
+}) {
+  const { ref, inView } = useInView(0.08);
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: inView ? 1 : 0,
+      transform: inView ? "translateX(0px)" : "translateX(-64px)",
+      transition: `opacity 0.9s cubic-bezier(0.22,1,0.36,1) ${delay}ms,
+                   transform 0.9s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+function FadeRight({ children, delay = 0, className = "" }: {
+  children: React.ReactNode; delay?: number; className?: string;
+}) {
+  const { ref, inView } = useInView(0.08);
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: inView ? 1 : 0,
+      transform: inView ? "translateX(0px)" : "translateX(64px)",
+      transition: `opacity 0.9s cubic-bezier(0.22,1,0.36,1) ${delay}ms,
+                   transform 0.9s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
+    }}>
+      {children}
+    </div>
+  );
+}
+
+function ScaleIn({ children, delay = 0, className = "" }: {
+  children: React.ReactNode; delay?: number; className?: string;
+}) {
+  const { ref, inView } = useInView(0.08);
+  return (
+    <div ref={ref} className={className} style={{
+      opacity: inView ? 1 : 0,
+      transform: inView ? "scale(1) translateY(0px)" : "scale(0.85) translateY(28px)",
+      transition: `opacity 0.65s cubic-bezier(0.34,1.56,0.64,1) ${delay}ms,
+                   transform 0.65s cubic-bezier(0.34,1.56,0.64,1) ${delay}ms`,
     }}>
       {children}
     </div>
@@ -80,10 +130,10 @@ const services = [
 ];
 
 const stats = [
-  { value: 500, suffix: "+",  label: "Campaigns Managed" },
-  { value: 126, suffix: "+",  label: "Happy Clients" },
-  { value: 8,   suffix: "+",  label: "Years Experience" },
-  { value: 300, suffix: "%",  label: "Average ROI" },
+  { value: 500, suffix: "+", label: "Campaigns Managed" },
+  { value: 126, suffix: "+", label: "Happy Clients" },
+  { value: 8,   suffix: "+", label: "Years Experience" },
+  { value: 300, suffix: "%", label: "Average ROI" },
 ];
 
 const expertise = [
@@ -132,19 +182,21 @@ const Label = ({ text }: { text: string }) => (
   </div>
 );
 
-const StatItem = ({ value, suffix, label, trigger }: {
-  value: number; suffix: string; label: string; trigger: boolean;
+const StatItem = ({ value, suffix, label, trigger, delay = 0 }: {
+  value: number; suffix: string; label: string; trigger: boolean; delay?: number;
 }) => {
   const count = useCountUp(value, 2200, trigger);
   return (
-    <div className="text-center">
-      <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white tabular-nums">
-        {count}<span className="text-violet-500 dark:text-violet-400">{suffix}</span>
+    <ScaleIn delay={delay}>
+      <div className="text-center group">
+        <div className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 dark:text-white tabular-nums group-hover:scale-110 transition-transform duration-300">
+          {count}<span className="text-violet-500 dark:text-violet-400">{suffix}</span>
+        </div>
+        <div className="text-gray-500 dark:text-white/40 text-xs uppercase tracking-widest font-semibold mt-2">
+          {label}
+        </div>
       </div>
-      <div className="text-gray-500 dark:text-white/40 text-xs uppercase tracking-widest font-semibold mt-2">
-        {label}
-      </div>
-    </div>
+    </ScaleIn>
   );
 };
 
@@ -155,7 +207,7 @@ const Marquee = () => {
       <div className="flex gap-10 animate-marquee whitespace-nowrap w-max">
         {items.map((item, i) => (
           <span key={i}
-            className="inline-flex items-center gap-2.5 text-gray-400 dark:text-white/35 text-[11px] font-bold uppercase tracking-widest flex-shrink-0">
+            className="inline-flex items-center gap-2.5 text-gray-400 dark:text-white/35 text-[11px] font-bold uppercase tracking-widest flex-shrink-0 hover:text-violet-500 dark:hover:text-violet-400 transition-colors duration-200">
             <span className="w-1.5 h-1.5 bg-violet-500 rounded-full flex-shrink-0" />
             {item}
           </span>
@@ -175,7 +227,7 @@ export default function HomePage() {
   const [posts, setPosts]         = useState<WordPressPost[]>([]);
   const [activeT, setActiveT]     = useState(0);
   const [videoOpen, setVideoOpen] = useState(false);
-  const statsSection              = useInView(0.25);
+  const statsSection              = useInView(0.2);
 
   useEffect(() => {
     fetch(`${WP_API_URL}/posts?_embed&per_page=3`)
@@ -193,14 +245,15 @@ export default function HomePage() {
   }, [videoOpen]);
 
   return (
-    // ↓ Root bg — white in light, dark in dark
     <div className="bg-white dark:bg-[#0B0B0F] text-gray-900 dark:text-white overflow-x-hidden">
 
       {/* ══════════════════════════════ HERO ══════════════════════════════ */}
-      <section className="relative min-h-[100svh] flex items-center pt-24 pb-16 overflow-hidden">
+      <section className="relative min-h-[100svh] flex items-center pt-10 pb-6 overflow-hidden">
+
+        {/* BG glows */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-32 -right-20 w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] bg-violet-700/20 dark:bg-violet-700/25 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 -left-10 w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] bg-purple-800/10 dark:bg-purple-800/15 rounded-full blur-[100px]" />
+          <div className="absolute -top-32 -right-20 w-[500px] h-[500px] lg:w-[700px] lg:h-[700px] bg-violet-700/20 dark:bg-violet-700/25 rounded-full blur-[120px] animate-pulse-slow" />
+          <div className="absolute bottom-0 -left-10 w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] bg-purple-800/10 dark:bg-purple-800/15 rounded-full blur-[100px] animate-pulse-slow" style={{ animationDelay: "1s" }} />
           <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.045]"
             style={{ backgroundImage: 'radial-gradient(circle, #8B5CF6 1px, transparent 1px)', backgroundSize: '40px 40px' }}
           />
@@ -209,77 +262,95 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 w-full relative z-10">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 
-            {/* LEFT */}
-            <div style={{ animation: "heroFadeIn 0.9s cubic-bezier(0.22,1,0.36,1) both" }}>
+            {/* LEFT — staggered entrance */}
+            <div>
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/25 rounded-full px-4 py-2 mb-6">
-                <span className="w-2 h-2 bg-violet-500 dark:bg-violet-400 rounded-full animate-pulse" />
-                <span className="text-violet-700 dark:text-violet-300 text-xs sm:text-sm font-semibold tracking-wide">
-                  Google Certified Partner Agency
-                </span>
+              <div style={{ animation: "heroFadeIn 0.6s cubic-bezier(0.22,1,0.36,1) 0.05s both" }}>
+                <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/25 rounded-full px-4 py-2 mb-6 hover:bg-violet-500/15 transition-colors duration-300 cursor-default">
+                  <span className="w-2 h-2 bg-violet-500 dark:bg-violet-400 rounded-full animate-pulse" />
+                  <span className="text-violet-700 dark:text-violet-300 text-xs sm:text-sm font-semibold tracking-wide">
+                    Google Certified Partner Agency
+                  </span>
+                  <Sparkles className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" />
+                </div>
               </div>
 
-              <h1 className="text-[42px] sm:text-5xl lg:text-[68px] font-black leading-[1.05] mb-5 tracking-tight">
-                <span className="text-gray-900 dark:text-white">Ads That </span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-purple-400 to-pink-400 dark:from-violet-400 dark:via-purple-300 dark:to-pink-300">
-                  Actually
-                </span>
-                <br />
-                <span className="text-gray-900 dark:text-white">Convert </span>
-                <span className="text-gray-300 dark:text-white/20">&amp; Scale.</span>
-              </h1>
+              {/* Headline — each line staggered */}
+              <div style={{ animation: "heroFadeIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.15s both" }}>
+                <h1 className="text-[42px] sm:text-5xl lg:text-[68px] font-black leading-[1.05] mb-5 tracking-tight">
+                  <span className="text-gray-900 dark:text-white">Ads That </span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-purple-400 to-pink-400 dark:from-violet-400 dark:via-purple-300 dark:to-pink-300 animate-gradient">
+                    Actually
+                  </span>
+                  <br />
+                  <span className="text-gray-900 dark:text-white">Convert </span>
+                  <span className="text-gray-300 dark:text-white/20">&amp; Scale.</span>
+                </h1>
+              </div>
 
-              <p className="text-base sm:text-lg text-gray-500 dark:text-white/55 mb-8 max-w-md leading-relaxed">
-                Rigveda Ads specialises in data-driven Google Ads, SEO and performance
-                marketing that delivers real, measurable ROI — across every industry and market.
-              </p>
+              <div style={{ animation: "heroFadeIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.25s both" }}>
+                <p className="text-base sm:text-lg text-gray-500 dark:text-white/55 mb-8 max-w-md leading-relaxed">
+                  Rigveda Ads specialises in data-driven Google Ads, SEO and performance
+                  marketing that delivers real, measurable ROI — across every industry and market.
+                </p>
+              </div>
 
               {/* CTAs */}
-              <div className="flex flex-col sm:flex-row gap-3 mb-8">
-                <Link href="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold px-7 py-4 rounded-2xl hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-xl shadow-violet-500/30 text-sm sm:text-base">
-                  Get Free Audit <ArrowRight className="w-5 h-5" />
-                </Link>
-                <a href={`tel:${PHONE}`}
-                  className="inline-flex items-center justify-center gap-2 border border-gray-200 dark:border-white/10 text-gray-800 dark:text-white font-semibold px-7 py-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-all text-sm sm:text-base">
-                  <Phone className="w-4 h-4 text-violet-500 dark:text-violet-400" /> {PHONE_DISP}
-                </a>
+              <div style={{ animation: "heroFadeIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.35s both" }}>
+                <div className="flex flex-col sm:flex-row gap-3 mb-8">
+                  <Link href="/contact"
+                    className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold px-7 py-4 rounded-2xl hover:opacity-90 hover:-translate-y-1 hover:shadow-2xl hover:shadow-violet-500/40 active:scale-95 transition-all duration-200 shadow-xl shadow-violet-500/30 text-sm sm:text-base group">
+                    Get Free Audit
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+                  </Link>
+                  <a href={`tel:${PHONE}`}
+                    className="inline-flex items-center justify-center gap-2 border border-gray-200 dark:border-white/10 text-gray-800 dark:text-white font-semibold px-7 py-4 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 text-sm sm:text-base">
+                    <Phone className="w-4 h-4 text-violet-500 dark:text-violet-400" /> {PHONE_DISP}
+                  </a>
+                </div>
               </div>
 
               {/* Social proof */}
-              <div className="flex items-center gap-4">
-                <div className="flex -space-x-3">
-                  {avatars.map((src, i) => (
-                    <img key={i} src={src} alt="client"
-                      className="w-9 h-9 rounded-full border-2 border-white dark:border-[#0B0B0F] object-cover" />
-                  ))}
-                </div>
-                <div>
-                  <div className="flex gap-0.5 mb-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+              <div style={{ animation: "heroFadeIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.45s both" }}>
+                <div className="flex items-center gap-4">
+                  <div className="flex -space-x-3">
+                    {avatars.map((src, i) => (
+                      <img key={i} src={src} alt="client"
+                        className="w-9 h-9 rounded-full border-2 border-white dark:border-[#0B0B0F] object-cover hover:scale-110 hover:z-10 transition-transform duration-200 relative"
+                        style={{ transitionDelay: `${i * 50}ms` }}
+                      />
                     ))}
                   </div>
-                  <p className="text-gray-400 dark:text-white/45 text-xs">
-                    <span className="text-gray-900 dark:text-white font-bold">500+</span> Five-Star Reviews
-                  </p>
+                  <div>
+                    <div className="flex gap-0.5 mb-0.5">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400"
+                          style={{ animation: `starPop 0.4s cubic-bezier(0.34,1.56,0.64,1) ${0.5 + i * 0.07}s both` }}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-gray-400 dark:text-white/45 text-xs">
+                      <span className="text-gray-900 dark:text-white font-bold">500+</span> Five-Star Reviews
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* RIGHT */}
-            <div className="relative hidden lg:block">
-              <div className="relative rounded-3xl overflow-hidden border border-gray-200 dark:border-white/8">
+            {/* RIGHT — slide from right */}
+            <div style={{ animation: "heroSlideRight 0.9s cubic-bezier(0.22,1,0.36,1) 0.2s both" }}
+              className="relative hidden lg:block">
+              <div className="relative rounded-3xl overflow-hidden border border-gray-200 dark:border-white/8 group">
                 <img
                   src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80"
                   alt="Digital marketing analytics"
-                  className="w-full h-[480px] object-cover"
+                  className="w-full h-[480px] object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-tr from-white/10 dark:from-[#0B0B0F]/70 via-transparent to-violet-900/20" />
               </div>
 
-              {/* Floating ROI */}
-              <div className="absolute -left-10 top-10 bg-white dark:bg-[#13131A]/90 backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-2xl p-5 shadow-2xl">
+              {/* Floating ROI card — float animation */}
+              <div className="absolute -left-10 top-10 bg-white dark:bg-[#13131A]/90 backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-2xl p-5 shadow-2xl animate-float">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-violet-500/10 rounded-xl flex items-center justify-center">
                     <TrendingUp className="w-5 h-5 text-violet-500 dark:text-violet-400" />
@@ -293,8 +364,8 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Floating Live */}
-              <div className="absolute -right-8 bottom-12 bg-white dark:bg-[#13131A]/90 backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-2xl p-5 shadow-2xl">
+              {/* Floating Live card — float delayed */}
+              <div className="absolute -right-8 bottom-12 bg-white dark:bg-[#13131A]/90 backdrop-blur-sm border border-gray-200 dark:border-white/10 rounded-2xl p-5 shadow-2xl animate-float" style={{ animationDelay: "0.7s" }}>
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                   <span className="text-gray-400 dark:text-white/40 text-[10px] font-bold uppercase tracking-wider">
@@ -307,12 +378,15 @@ export default function HomePage() {
                 <div className="text-gray-400 dark:text-white/40 text-xs mt-0.5">Active Clients</div>
               </div>
 
-              {/* Play */}
+              {/* Play button with pulse ring */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <button onClick={() => setVideoOpen(true)}
-                  className="w-16 h-16 rounded-full bg-black/10 dark:bg-white/10 border border-black/20 dark:border-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-black/20 dark:hover:bg-white/20 hover:scale-110 transition-all shadow-xl">
-                  <Play className="w-6 h-6 fill-gray-900 dark:fill-white text-gray-900 dark:text-white ml-1" />
-                </button>
+                <div className="relative">
+                  <span className="absolute inset-0 rounded-full bg-white/20 dark:bg-white/10 animate-ping-slow" />
+                  <button onClick={() => setVideoOpen(true)}
+                    className="relative w-16 h-16 rounded-full bg-black/10 dark:bg-white/10 border border-black/20 dark:border-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-black/20 dark:hover:bg-white/20 hover:scale-110 active:scale-95 transition-all duration-200 shadow-xl">
+                    <Play className="w-6 h-6 fill-gray-900 dark:fill-white text-gray-900 dark:text-white ml-1" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -324,8 +398,11 @@ export default function HomePage() {
               { label: "Avg ROI",   value: "300%" },
               { label: "Clients",   value: "126+" },
               { label: "Experience",value: "8 Yrs" },
-            ].map(({ label, value }) => (
-              <div key={label} className="bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/8 rounded-xl p-4 text-center">
+            ].map(({ label, value }, i) => (
+              <div key={label}
+                className="bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/8 rounded-xl p-4 text-center hover:border-violet-500/30 hover:-translate-y-0.5 transition-all duration-200"
+                style={{ animation: `heroFadeIn 0.5s ease ${0.5 + i * 0.08}s both` }}
+              >
                 <div className="text-2xl font-black text-gray-900 dark:text-white">{value}</div>
                 <div className="text-gray-400 dark:text-white/35 text-xs mt-0.5">{label}</div>
               </div>
@@ -334,7 +411,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ══════════════════════════ MARQUEE TICKER ════════════════════════ */}
+      {/* ══════════════════════════ MARQUEE ═══════════════════════════════ */}
       <Marquee />
 
       {/* ════════════════════════════ EXPERTISE ══════════════════════════ */}
@@ -342,34 +419,36 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
 
-            {/* Image collage */}
-            <FadeUp>
+            {/* Image collage — slide from left */}
+            <FadeLeft>
               <div className="relative">
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   <img
                     src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
                     alt="Team"
-                    className="rounded-2xl lg:rounded-3xl w-full h-44 sm:h-56 lg:h-64 object-cover"
+                    className="rounded-2xl lg:rounded-3xl w-full h-44 sm:h-56 lg:h-64 object-cover hover:scale-[1.03] transition-transform duration-500"
                   />
                   <img
                     src="https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
                     alt="Analytics"
-                    className="rounded-2xl lg:rounded-3xl w-full h-44 sm:h-56 lg:h-64 object-cover mt-8 sm:mt-10"
+                    className="rounded-2xl lg:rounded-3xl w-full h-44 sm:h-56 lg:h-64 object-cover mt-8 sm:mt-10 hover:scale-[1.03] transition-transform duration-500"
                   />
                 </div>
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-[#13131A] border border-violet-500/20 rounded-2xl px-7 py-4 text-center shadow-2xl shadow-black/10 dark:shadow-black/70 w-48 sm:w-56">
-                  <div className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white">
-                    8<span className="text-violet-500 dark:text-violet-400">+</span>
+                <ScaleIn delay={200}>
+                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-[#13131A] border border-violet-500/20 rounded-2xl px-7 py-4 text-center shadow-2xl shadow-black/10 dark:shadow-black/70 w-48 sm:w-56">
+                    <div className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white">
+                      8<span className="text-violet-500 dark:text-violet-400">+</span>
+                    </div>
+                    <div className="text-gray-400 dark:text-white/45 text-xs mt-1 leading-snug">
+                      Years in Performance Marketing
+                    </div>
                   </div>
-                  <div className="text-gray-400 dark:text-white/45 text-xs mt-1 leading-snug">
-                    Years in Performance Marketing
-                  </div>
-                </div>
+                </ScaleIn>
               </div>
-            </FadeUp>
+            </FadeLeft>
 
-            {/* Content */}
-            <FadeUp delay={150}>
+            {/* Content — slide from right */}
+            <FadeRight delay={100}>
               <Label text="Our Expertise" />
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-[1.08] mb-6 tracking-tight">
                 <span className="text-gray-900 dark:text-white">Data Driven</span><br />
@@ -387,18 +466,24 @@ export default function HomePage() {
               </p>
               <div className="space-y-3 mb-8">
                 {expertise.map((item, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-violet-500 dark:text-violet-400 flex-shrink-0" />
-                    <span className="text-gray-600 dark:text-white/70 text-sm">{item}</span>
+                  <div key={i} className="flex items-center gap-3 group"
+                    style={{ animation: `expertiseIn 0.5s ease ${i * 80}ms both`, animationPlayState: "paused" }}>
+                    <FadeUp delay={i * 60}>
+                      <div className="flex items-center gap-3">
+                        <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-violet-500 dark:text-violet-400 flex-shrink-0 group-hover:scale-110 transition-transform duration-200" />
+                        <span className="text-gray-600 dark:text-white/70 text-sm group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-200">{item}</span>
+                      </div>
+                    </FadeUp>
                   </div>
                 ))}
               </div>
 
               <Link href="/contact"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold px-7 py-3.5 rounded-2xl hover:opacity-90 transition-all shadow-lg shadow-violet-500/25 text-sm sm:text-base">
-                Get Free Consultation <ArrowRight className="w-5 h-5" />
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold px-7 py-3.5 rounded-2xl hover:opacity-90 hover:-translate-y-1 transition-all duration-200 shadow-lg shadow-violet-500/25 text-sm sm:text-base group">
+                Get Free Consultation
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
-            </FadeUp>
+            </FadeRight>
           </div>
         </div>
       </section>
@@ -421,29 +506,32 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {services.map(({ icon: Icon, title, desc }, i) => (
-              <FadeUp key={i} delay={i * 60}>
-                <div className="group bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/5 rounded-2xl p-5 sm:p-6 hover:border-violet-500/40 hover:bg-gray-50 dark:hover:bg-[#16161F] transition-all duration-300 hover:-translate-y-1.5 cursor-default h-full shadow-sm dark:shadow-none">
-                  <div className="w-10 h-10 bg-violet-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-violet-500/20 transition-colors">
-                    <Icon className="w-5 h-5 text-violet-500 dark:text-violet-400" />
+              <ScaleIn key={i} delay={i * 70}>
+                <div className="group bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/5 rounded-2xl p-5 sm:p-6 hover:border-violet-500/50 hover:bg-gray-50 dark:hover:bg-[#16161F] transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-violet-500/10 cursor-default h-full shadow-sm dark:shadow-none">
+                  <div className="w-10 h-10 bg-violet-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-violet-500/20 group-hover:scale-110 transition-all duration-300">
+                    <Icon className="w-5 h-5 text-violet-500 dark:text-violet-400 group-hover:rotate-6 transition-transform duration-300" />
                   </div>
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 text-[14px] sm:text-[15px]">{title}</h3>
+                  <h3 className="font-bold text-gray-900 dark:text-white mb-2 text-[14px] sm:text-[15px] group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors duration-200">{title}</h3>
                   <p className="text-gray-400 dark:text-white/40 text-xs leading-relaxed">{desc}</p>
-                  <div className="mt-4 flex items-center text-violet-500 dark:text-violet-400 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-all">
+                  <div className="mt-4 flex items-center text-violet-500 dark:text-violet-400 text-xs font-semibold opacity-0 group-hover:opacity-100 translate-x-[-8px] group-hover:translate-x-0 transition-all duration-300">
                     Learn more <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
                   </div>
                 </div>
-              </FadeUp>
+              </ScaleIn>
             ))}
           </div>
         </div>
       </section>
 
       {/* ═════════════════════════════ STATS ═════════════════════════════ */}
-      <div ref={statsSection.ref} className="py-16 lg:py-20 border-y border-gray-200 dark:border-white/8">
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div ref={statsSection.ref} className="py-16 lg:py-20 border-y border-gray-200 dark:border-white/8 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[200px] bg-violet-500/5 dark:bg-violet-500/[0.07] rounded-full blur-[80px]" />
+        </div>
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-16">
             {stats.map((s, i) => (
-              <StatItem key={i} {...s} trigger={statsSection.inView} />
+              <StatItem key={i} {...s} trigger={statsSection.inView} delay={i * 100} />
             ))}
           </div>
         </div>
@@ -466,17 +554,23 @@ export default function HomePage() {
 
           <div className="flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {process.map(({ step, title, desc }, i) => (
-              <FadeUp key={i} delay={i * 100}>
-                <div className="relative flex lg:block gap-5 lg:gap-0 bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/5 rounded-2xl p-5 sm:p-7 hover:border-violet-500/30 transition-all hover:-translate-y-1 duration-300 h-full shadow-sm dark:shadow-none">
-                  <div className="text-5xl sm:text-6xl font-black text-violet-500/15 tabular-nums flex-shrink-0 lg:mb-4 leading-none">
+              <FadeUp key={i} delay={i * 120}>
+                <div className="relative flex lg:block gap-5 lg:gap-0 bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/5 rounded-2xl p-5 sm:p-7 hover:border-violet-500/40 hover:shadow-xl hover:shadow-violet-500/8 transition-all duration-300 hover:-translate-y-2 h-full shadow-sm dark:shadow-none group">
+
+                  {/* Step number with animated bg */}
+                  <div className="text-5xl sm:text-6xl font-black text-violet-500/15 group-hover:text-violet-500/25 transition-colors duration-300 tabular-nums flex-shrink-0 lg:mb-4 leading-none">
                     {step}
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 dark:text-white mb-1.5 text-sm sm:text-base">{title}</h3>
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-1.5 text-sm sm:text-base group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors duration-200">{title}</h3>
                     <p className="text-gray-400 dark:text-white/45 text-xs sm:text-sm leading-relaxed">{desc}</p>
                   </div>
+
+                  {/* Animated connector line */}
                   {i < 3 && (
-                    <div className="hidden lg:block absolute top-7 left-full w-full h-px bg-gradient-to-r from-violet-500/40 to-transparent z-10" />
+                    <div className="hidden lg:block absolute top-7 left-full w-full h-px z-10 overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-violet-500/40 to-transparent animate-line-grow" />
+                    </div>
                   )}
                 </div>
               </FadeUp>
@@ -503,20 +597,23 @@ export default function HomePage() {
               <div className="absolute top-0 right-0 w-48 h-48 bg-violet-700/5 rounded-full blur-2xl pointer-events-none" />
               <Quote className="w-10 h-10 text-violet-500/15 absolute top-6 right-6" />
 
+              {/* Stars */}
               <div className="flex gap-1 mb-5">
                 {[...Array(testimonials[activeT].rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
+                  <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400"
+                    style={{ animation: `starPop 0.3s cubic-bezier(0.34,1.56,0.64,1) ${i * 60}ms both` }}
+                  />
                 ))}
               </div>
 
               <p key={activeT}
                 className="text-gray-700 dark:text-white/80 text-base sm:text-xl leading-relaxed mb-7 italic relative z-10"
-                style={{ animation: "fadeIn 0.4s ease" }}>
+                style={{ animation: "testimonialIn 0.5s cubic-bezier(0.22,1,0.36,1) both" }}>
                 "{testimonials[activeT].text}"
               </p>
 
               <div className="flex items-center justify-between gap-4">
-                <div>
+                <div style={{ animation: "testimonialIn 0.5s cubic-bezier(0.22,1,0.36,1) 0.1s both" }}>
                   <div className="font-black text-gray-900 dark:text-white text-sm sm:text-base">
                     {testimonials[activeT].name}
                   </div>
@@ -527,10 +624,10 @@ export default function HomePage() {
                 <div className="flex gap-2 flex-shrink-0">
                   {testimonials.map((_, i) => (
                     <button key={i} onClick={() => setActiveT(i)}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                      className={`h-1.5 rounded-full transition-all duration-500 ${
                         i === activeT
                           ? 'bg-violet-500 w-7'
-                          : 'bg-gray-200 dark:bg-white/15 w-1.5 hover:bg-gray-300 dark:hover:bg-white/30'
+                          : 'bg-gray-200 dark:bg-white/15 w-1.5 hover:bg-gray-300 dark:hover:bg-white/30 hover:w-3'
                       }`}
                     />
                   ))}
@@ -554,26 +651,27 @@ export default function HomePage() {
                   </h2>
                 </div>
                 <Link href="/blogs"
-                  className="hidden sm:inline-flex items-center gap-1 text-violet-600 dark:text-violet-400 font-semibold hover:text-violet-500 dark:hover:text-violet-300 transition-colors text-sm flex-shrink-0">
-                  View All <ArrowRight className="w-4 h-4" />
+                  className="hidden sm:inline-flex items-center gap-1 text-violet-600 dark:text-violet-400 font-semibold hover:text-violet-500 dark:hover:text-violet-300 transition-colors text-sm flex-shrink-0 group">
+                  View All
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
                 </Link>
               </div>
             </FadeUp>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {posts.map((post, i) => (
-                <FadeUp key={post.id} delay={i * 100}>
-                  <article className="bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden group hover:border-violet-500/30 hover:-translate-y-1.5 transition-all duration-300 h-full flex flex-col shadow-sm dark:shadow-none">
+                <FadeUp key={post.id} delay={i * 120}>
+                  <article className="bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden group hover:border-violet-500/40 hover:-translate-y-2 hover:shadow-xl hover:shadow-violet-500/8 transition-all duration-300 h-full flex flex-col shadow-sm dark:shadow-none">
                     <div className="aspect-video overflow-hidden flex-shrink-0">
                       {post._embedded?.['wp:featuredmedia']?.[0]?.source_url ? (
                         <img
                           src={post._embedded['wp:featuredmedia'][0].source_url}
                           alt={post.title.rendered}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                       ) : (
                         <div className="w-full h-full bg-gradient-to-br from-violet-100 dark:from-violet-900/30 to-purple-100 dark:to-purple-900/10 flex items-center justify-center">
-                          <BookOpen className="w-10 h-10 text-violet-400 dark:text-violet-500/30" />
+                          <BookOpen className="w-10 h-10 text-violet-400 dark:text-violet-500/30 group-hover:scale-110 transition-transform duration-300" />
                         </div>
                       )}
                     </div>
@@ -581,15 +679,16 @@ export default function HomePage() {
                       <div className="text-gray-400 dark:text-white/25 text-xs mb-3 flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5" /> {fmtDate(post.date)}
                       </div>
-                      <h3 className="font-bold text-gray-900 dark:text-white mb-2 group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors line-clamp-2 text-sm flex-1">
+                      <h3 className="font-bold text-gray-900 dark:text-white mb-2 group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors duration-200 line-clamp-2 text-sm flex-1">
                         <Link href={`/blogs/${post.slug}`}>{post.title.rendered}</Link>
                       </h3>
                       <p className="text-gray-400 dark:text-white/35 text-xs line-clamp-2 mb-4 leading-relaxed">
                         {stripHtml(post.excerpt.rendered)}
                       </p>
                       <Link href={`/blogs/${post.slug}`}
-                        className="inline-flex items-center text-violet-600 dark:text-violet-400 text-xs font-semibold hover:text-violet-500 dark:hover:text-violet-300 transition-colors">
-                        Read More <ChevronRight className="w-4 h-4 ml-0.5" />
+                        className="inline-flex items-center text-violet-600 dark:text-violet-400 text-xs font-semibold hover:text-violet-500 dark:hover:text-violet-300 transition-colors group/link">
+                        Read More
+                        <ChevronRight className="w-4 h-4 ml-0.5 group-hover/link:translate-x-1 transition-transform duration-200" />
                       </Link>
                     </div>
                   </article>
@@ -608,37 +707,44 @@ export default function HomePage() {
       )}
 
       {/* ══════════════════════════ BOTTOM CTA ═══════════════════════════ */}
-      {/* Gradient overlay — white text stays valid here in both themes */}
       <section className="py-20 lg:py-28 relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-r from-violet-900/35 to-purple-900/25" />
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
           <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
+          <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-violet-600/15 rounded-full blur-[120px] animate-pulse-slow" />
           <div className="absolute inset-0 opacity-[0.04]"
             style={{ backgroundImage: 'radial-gradient(circle, #8B5CF6 1px, transparent 1px)', backgroundSize: '44px 44px' }}
           />
         </div>
         <FadeUp className="max-w-4xl mx-auto px-5 sm:px-6 lg:px-8 text-center relative z-10">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-4 text-white">
-            Ready to{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-purple-200">
-              Grow?
-            </span>
-          </h2>
-          <p className="text-white/70 text-base sm:text-lg mb-8 max-w-xl mx-auto leading-relaxed px-2">
-            Get a free Google Ads audit and custom strategy — see exactly how we'll grow
-            your business before you spend a single rupee.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact"
-              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-black px-8 sm:px-10 py-4 sm:py-5 rounded-2xl hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-2xl shadow-violet-500/35 text-base sm:text-lg">
-              Start Free Audit <ArrowRight className="w-5 h-5" />
-            </Link>
-            <a href={`tel:${PHONE}`}
-              className="inline-flex items-center justify-center gap-2 border border-white/20 text-white font-bold px-8 sm:px-10 py-4 sm:py-5 rounded-2xl hover:bg-white/10 transition-all text-base sm:text-lg">
-              <Phone className="w-5 h-5" /> {PHONE_DISP}
-            </a>
-          </div>
+          <ScaleIn>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black mb-4 text-white">
+              Ready to{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-purple-200 animate-gradient">
+                Grow?
+              </span>
+            </h2>
+          </ScaleIn>
+          <FadeUp delay={100}>
+            <p className="text-white/70 text-base sm:text-lg mb-8 max-w-xl mx-auto leading-relaxed px-2">
+              Get a free Google Ads audit and custom strategy — see exactly how we'll grow
+              your business before you spend a single rupee.
+            </p>
+          </FadeUp>
+          <FadeUp delay={200}>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/contact"
+                className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-black px-8 sm:px-10 py-4 sm:py-5 rounded-2xl hover:opacity-90 hover:-translate-y-1 hover:shadow-2xl hover:shadow-violet-500/50 active:scale-95 transition-all duration-200 shadow-2xl shadow-violet-500/35 text-base sm:text-lg group">
+                Start Free Audit
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+              </Link>
+              <a href={`tel:${PHONE}`}
+                className="inline-flex items-center justify-center gap-2 border border-white/20 text-white font-bold px-8 sm:px-10 py-4 sm:py-5 rounded-2xl hover:bg-white/10 hover:-translate-y-0.5 active:scale-95 transition-all duration-200 text-base sm:text-lg">
+                <Phone className="w-5 h-5" /> {PHONE_DISP}
+              </a>
+            </div>
+          </FadeUp>
         </FadeUp>
       </section>
 
@@ -646,14 +752,16 @@ export default function HomePage() {
       {videoOpen && (
         <div
           className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
+          style={{ animation: "fadeIn 0.2s ease both" }}
           onClick={() => setVideoOpen(false)}
         >
           <div
             className="relative w-full max-w-3xl bg-white dark:bg-[#13131A] rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10"
+            style={{ animation: "modalSlideUp 0.35s cubic-bezier(0.22,1,0.36,1) both" }}
             onClick={e => e.stopPropagation()}
           >
             <button onClick={() => setVideoOpen(false)}
-              className="absolute top-3 right-3 z-10 w-8 h-8 bg-black/10 dark:bg-white/10 rounded-full flex items-center justify-center hover:bg-black/20 dark:hover:bg-white/20 transition-colors">
+              className="absolute top-3 right-3 z-10 w-8 h-8 bg-black/10 dark:bg-white/10 rounded-full flex items-center justify-center hover:bg-black/20 dark:hover:bg-white/20 hover:rotate-90 transition-all duration-300">
               <X className="w-4 h-4 text-gray-700 dark:text-white" />
             </button>
             <div className="aspect-video bg-gray-100 dark:bg-[#0B0B0F] flex items-center justify-center">

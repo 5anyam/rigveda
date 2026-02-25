@@ -1,528 +1,593 @@
+// app/contact/page.tsx
 "use client";
 
-import { Metadata } from "next";
-import {
-  Phone, Mail, MapPin, Clock, MessageSquare,
-  Shield, Zap, Target, BarChart3, Globe,
-  ArrowRight, CheckCircle2, ChevronDown, Star
-} from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
+import Link from "next/link";
+import {
+  Phone, Mail, MapPin, Clock, Send, CheckCircle,
+  ArrowRight, ChevronRight, Zap, MessageSquare,
+  Building2, Calendar, AlertCircle
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-const contactCards = [
+const PHONE      = "+917840000618";
+const PHONE_DISP = "+91 78400 00618";
+const EMAIL      = "info@rigvedaadds.com";
+const ADDRESS    = "Delhi, India";
+
+// ─── Data ──────────────────────────────────────────────────────
+const contactInfo = [
   {
     icon: Phone,
-    title: "Call Us",
-    primary: "+91 78400 00618",
-    href: "tel:+917840000618",
-    sub: "Mon – Sat, 10:00 AM – 7:00 PM",
-    cta: "Call Now",
-  },
-  {
-    icon: MessageSquare,
-    title: "WhatsApp",
-    primary: "+91 78400 00618",
-    href: "https://wa.me/917840000618",
-    sub: "Quick replies within minutes",
-    cta: "Chat Now",
-    external: true,
+    label: "Call Us",
+    value: PHONE_DISP,
+    sub: "Mon–Sat, 9 AM – 7 PM",
+    href: `tel:${PHONE}`,
+    color: "text-violet-500",
+    bg: "bg-violet-500/10",
   },
   {
     icon: Mail,
-    title: "Email Us",
-    primary: "info@rigvedaadds.com",
-    href: "mailto:info@rigvedaadds.com",
-    sub: "Response within 24 hours",
-    cta: "Send Email",
+    label: "Email Us",
+    value: EMAIL,
+    sub: "Reply within 4 hours",
+    href: `mailto:${EMAIL}`,
+    color: "text-blue-500",
+    bg: "bg-blue-500/10",
   },
   {
     icon: MapPin,
-    title: "Office",
-    primary: "New Delhi, India",
-    href: "https://maps.google.com/?q=Rohini+New+Delhi",
-    sub: "D-7/296, 2nd Floor, Sector-6, Rohini",
-    cta: "Get Directions",
-    external: true,
+    label: "Location",
+    value: "Delhi, India",
+    sub: "Serving clients Pan India",
+    href: "https://maps.google.com",
+    color: "text-pink-500",
+    bg: "bg-pink-500/10",
+  },
+  {
+    icon: Clock,
+    label: "Working Hours",
+    value: "Mon – Sat",
+    sub: "9:00 AM – 7:00 PM IST",
+    href: null,
+    color: "text-emerald-500",
+    bg: "bg-emerald-500/10",
   },
 ];
 
-const whyUs = [
-  { icon: Shield,   title: "Google Certified",    desc: "Official Google Partner with certified expertise in Search, Display, and YouTube ads." },
-  { icon: Target,   title: "ROI Focused",          desc: "Every campaign is optimised to maximise your return — we track every rupee spent." },
-  { icon: BarChart3,title: "Full Transparency",    desc: "Weekly reports and live dashboards. No hidden fees, no vague metrics." },
-  { icon: Globe,    title: "Pan-India + Global",   desc: "Campaigns across India and international markets including US, UK, UAE." },
+const services = [
+  "Google Ads (Search / Display / YouTube / Shopping)",
+  "SEO (Local / Technical / Content Marketing)",
+  "Social Media Ads (Meta / LinkedIn / YouTube)",
+  "Performance Marketing & Retargeting",
+  "Web Development (Next.js / WordPress / Landing Pages)",
+  "Brand Bidding",
+  "Multiple Services",
+  "Not Sure — Need Guidance",
 ];
 
-const services = [
-  "Google Search & Display Ads",
-  "YouTube Video Advertising",
-  "Facebook & Instagram Ads",
-  "Brand Bidding Campaigns",
-  "SEO & Organic Growth",
-  "Performance Marketing",
-  "International Campaigns",
-  "Landing Page Development",
+const budgets = [
+  "Under ₹20,000/month",
+  "₹20,000 – ₹50,000/month",
+  "₹50,000 – ₹1,00,000/month",
+  "₹1,00,000 – ₹3,00,000/month",
+  "₹3,00,000+/month",
+];
+
+const steps = [
+  { step: "01", title: "Submit Form",       desc: "Fill out the form and we'll receive your details instantly." },
+  { step: "02", title: "Discovery Call",    desc: "A 30-min call to understand your goals, competition, and current setup." },
+  { step: "03", title: "Free Audit",        desc: "We audit your current digital presence and identify growth opportunities." },
+  { step: "04", title: "Strategy & Quote",  desc: "You receive a clear strategy and transparent pricing — no obligation." },
 ];
 
 const faqs = [
   {
-    q: "How do I get started with Rigveda Ads?",
-    a: "Start with a free Google Ads audit — call us or fill the form. We'll analyse your current campaigns (or competitors) and share a custom strategy within 24 hours.",
+    q: "How quickly will you respond to my enquiry?",
+    a: "We respond to all enquiries within 4 business hours on weekdays. For urgent matters, call us directly — our team is available Mon–Sat, 9 AM–7 PM IST.",
   },
   {
-    q: "Do you work with businesses outside Delhi?",
-    a: "Yes, we work with clients pan-India and internationally. All work is done remotely with regular video calls, weekly reports and live dashboard access.",
+    q: "Is the initial consultation really free?",
+    a: "Yes, completely free. The discovery call and audit involve no charges or obligations. We share our findings and recommendations regardless of whether you decide to work with us.",
   },
   {
-    q: "What is your minimum ad budget requirement?",
-    a: "We work with budgets starting from ₹15,000/month in ad spend. Our management fee is separate and depends on campaign complexity. Free audit first — no commitment.",
+    q: "Do you work with startups and small businesses?",
+    a: "Absolutely. We work with businesses at every stage — from early-stage startups with ₹20,000/month budgets to established brands spending ₹50L+/month. Our recommendations are always calibrated to your budget and stage.",
   },
   {
-    q: "How soon can I expect results from Google Ads?",
-    a: "Most clients see measurable improvements within the first 2 weeks. Full optimisation typically takes 30–60 days as we gather enough data to fine-tune targeting and bids.",
-  },
-  {
-    q: "Will you run ads for my competitors' brand names?",
-    a: "Yes — competitor bidding and brand protection campaigns are one of our specialties. We can both protect your brand from competitor ads and run ads on competitor keywords.",
-  },
-  {
-    q: "Do you offer a free consultation?",
-    a: "Absolutely. We offer a free 30-minute strategy call + free Google Ads audit for all new prospects. No obligation, no pressure — just honest advice.",
+    q: "Can I meet in person at your Delhi office?",
+    a: "Yes — we welcome in-person meetings at our Delhi office. Schedule via the form or call us to book a time. We also serve clients remotely across India and internationally.",
   },
 ];
 
-// ─── Label ────────────────────────────────────────────────────────────────────
-const Label = ({ text }: { text: string }) => (
-  <div className="inline-flex items-center gap-2 mb-4">
-    <span className="w-4 h-4 rounded-full border-2 border-violet-500 flex items-center justify-center">
-      <span className="w-1.5 h-1.5 bg-violet-500 rounded-full" />
-    </span>
-    <span className="text-violet-400 font-semibold text-sm">{text}</span>
-  </div>
-);
-
-// ─── FAQ Accordion Item ───────────────────────────────────────────────────────
-const FaqItem = ({ q, a }: { q: string; a: string }) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <div
-      className={`bg-[#13131A] border rounded-2xl overflow-hidden transition-all duration-300 ${
-        open ? "border-violet-500/30" : "border-white/5 hover:border-white/10"
-      }`}
-    >
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-6 text-left"
-      >
-        <span className="font-semibold text-white/85 text-sm pr-4">{q}</span>
-        <ChevronDown
-          className={`w-5 h-5 text-violet-400 flex-shrink-0 transition-transform duration-300 ${
-            open ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-      <div
-        className={`transition-all duration-300 ${
-          open ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-        } overflow-hidden`}
-      >
-        <p className="px-6 pb-6 text-white/45 text-sm leading-relaxed">{a}</p>
-      </div>
-    </div>
-  );
+type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  service: string;
+  budget: string;
+  message: string;
 };
 
-// ─── Contact Form ─────────────────────────────────────────────────────────────
-const ContactForm = () => {
-  const [form, setForm] = useState({
-    name: "", phone: "", email: "", service: "", budget: "", message: "",
+type FormStatus = "idle" | "loading" | "success" | "error";
+
+export default function ContactPage() {
+  const [form, setForm] = useState<FormData>({
+    name: "", email: "", phone: "", company: "",
+    service: "", budget: "", message: "",
   });
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<FormStatus>("idle");
 
-  const set = (k: string, v: string) => setForm((p) => ({ ...p, [k]: v }));
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 4000);
-    setForm({ name: "", phone: "", email: "", service: "", budget: "", message: "" });
+    setStatus("loading");
+    // Replace with your actual form submission logic
+    await new Promise((r) => setTimeout(r, 1500));
+    setStatus("success");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-semibold text-white/30 uppercase tracking-widest mb-2">
-            Full Name *
-          </label>
-          <input
-            type="text" required value={form.name}
-            onChange={(e) => set("name", e.target.value)}
-            placeholder="Your name"
-            className="w-full bg-white/5 border border-white/8 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-violet-500/50 focus:bg-white/8 transition-all"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-semibold text-white/30 uppercase tracking-widest mb-2">
-            Phone Number *
-          </label>
-          <input
-            type="tel" required value={form.phone}
-            onChange={(e) => set("phone", e.target.value)}
-            placeholder="+91 XXXXX XXXXX"
-            className="w-full bg-white/5 border border-white/8 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-violet-500/50 focus:bg-white/8 transition-all"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-xs font-semibold text-white/30 uppercase tracking-widest mb-2">
-          Email Address
-        </label>
-        <input
-          type="email" value={form.email}
-          onChange={(e) => set("email", e.target.value)}
-          placeholder="you@company.com"
-          className="w-full bg-white/5 border border-white/8 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-violet-500/50 focus:bg-white/8 transition-all"
-        />
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-semibold text-white/30 uppercase tracking-widest mb-2">
-            Service Needed
-          </label>
-          <select
-            value={form.service} onChange={(e) => set("service", e.target.value)}
-            className="w-full bg-[#13131A] border border-white/8 rounded-xl px-4 py-3 text-sm text-white/60 focus:outline-none focus:border-violet-500/50 transition-all appearance-none"
-          >
-            <option value="">Select a service</option>
-            <option>Google Ads (PPC)</option>
-            <option>SEO & Organic Growth</option>
-            <option>Facebook & Instagram Ads</option>
-            <option>Brand Bidding</option>
-            <option>Performance Marketing</option>
-            <option>International Campaigns</option>
-            <option>Website Development</option>
-            <option>Full Digital Strategy</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-xs font-semibold text-white/30 uppercase tracking-widest mb-2">
-            Monthly Ad Budget
-          </label>
-          <select
-            value={form.budget} onChange={(e) => set("budget", e.target.value)}
-            className="w-full bg-[#13131A] border border-white/8 rounded-xl px-4 py-3 text-sm text-white/60 focus:outline-none focus:border-violet-500/50 transition-all appearance-none"
-          >
-            <option value="">Select budget range</option>
-            <option>₹15,000 – ₹50,000</option>
-            <option>₹50,000 – ₹1,00,000</option>
-            <option>₹1,00,000 – ₹3,00,000</option>
-            <option>₹3,00,000+</option>
-          </select>
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-xs font-semibold text-white/30 uppercase tracking-widest mb-2">
-          Tell Us About Your Business
-        </label>
-        <textarea
-          value={form.message} onChange={(e) => set("message", e.target.value)}
-          rows={4} placeholder="What are your goals? Current challenges? Any context helps..."
-          className="w-full bg-white/5 border border-white/8 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-violet-500/50 focus:bg-white/8 transition-all resize-none"
-        />
-      </div>
-
-      <button
-        type="submit"
-        className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-black py-4 rounded-xl hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-violet-500/25 text-sm"
-      >
-        {sent ? (
-          <><CheckCircle2 className="w-5 h-5" /> Received! We will contact you within 2 hours.</>
-        ) : (
-          <><Zap className="w-5 h-5" /> Get Free Strategy Call <ArrowRight className="w-4 h-4" /></>
-        )}
-      </button>
-
-      <p className="text-xs text-white/20 text-center">
-        🔒 100% confidential. No spam. No obligation.
-      </p>
-    </form>
-  );
-};
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
-export default function ContactPage() {
-  return (
-    <div className="bg-[#0B0B0F] text-white overflow-x-hidden">
-
-      {/* ════════════ HERO */}
-      <section className="relative pt-28 pb-16 overflow-hidden">
+    <>
+      {/* ── HERO ─────────────────────────────────────────────── */}
+      <section className="relative bg-white dark:bg-[#0B0B0F] pt-10 pb-0 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-20 right-0 w-[600px] h-[500px] bg-violet-700/20 rounded-full blur-[120px]" />
-          <div
-            className="absolute inset-0 opacity-[0.04]"
-            style={{ backgroundImage: "radial-gradient(circle, #8B5CF6 1px, transparent 1px)", backgroundSize: "44px 44px" }}
-          />
+          <div className="absolute -top-20 -right-20 w-[400px] h-[400px] bg-violet-500/10 dark:bg-violet-600/15 rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 -left-10 w-[300px] h-[300px] bg-indigo-600/8 dark:bg-indigo-800/12 rounded-full blur-[80px]" />
         </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <nav className="flex items-center gap-2 text-xs text-white/30 mb-8">
-            <Link href="/" className="hover:text-violet-400 transition-colors">Home</Link>
-            <span>/</span>
-            <span className="text-white/60">Contact</span>
+          <nav className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-white/35 mb-6 flex-wrap">
+            <Link href="/" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">Home</Link>
+            <ChevronRight className="w-3 h-3" />
+            <span className="text-gray-600 dark:text-white/60">Contact</span>
           </nav>
-          <div className="max-w-2xl">
-            <Label text="Get In Touch" />
-            <h1 className="text-5xl lg:text-7xl font-black leading-[1.03] mb-5 tracking-tight">
-              <span className="text-white">Let us </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-300 to-pink-300">
-                Grow
+
+          <div className="max-w-3xl pb-14 lg:pb-16" style={{ animation: "heroFadeIn 0.7s ease both" }}>
+            <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-1.5 mb-5">
+              <MessageSquare className="w-3.5 h-3.5 text-violet-500" />
+              <span className="text-violet-700 dark:text-violet-300 text-xs font-semibold">
+                Free Audit · No Obligation · Reply in 4 Hours
               </span>
+            </div>
+
+            <h1 className="text-[36px] sm:text-5xl lg:text-[56px] font-black leading-[1.06] tracking-tight mb-5">
+              <span className="text-gray-900 dark:text-white">Let us Grow Your </span>
               <br />
-              <span className="text-white">Your Ads</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500">
+                Business Together
+              </span>
             </h1>
-            <p className="text-lg text-white/45 leading-relaxed">
-              Book a free strategy call or send us a message. We will audit your
-              current campaigns and recommend exactly what will move the needle.
+
+            <p className="text-gray-500 dark:text-white/55 text-base sm:text-lg leading-relaxed mb-7 max-w-xl">
+              Tell us about your business and goals. We will audit your current
+              digital presence and give you a
+              <strong className="text-gray-900 dark:text-white"> clear, actionable strategy — completely free.</strong>
             </p>
+
+            <div className="flex flex-wrap gap-4">
+              {["Free Audit Included", "No Lock-in Contracts", "Response in 4 Hours", "Pan India + International"].map((b) => (
+                <div key={b} className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-white/50 font-medium">
+                  <CheckCircle className="w-3.5 h-3.5 text-green-500 flex-shrink-0" /> {b}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full overflow-hidden leading-none">
+          <svg viewBox="0 0 1440 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-7">
+            <path d="M0,18 C360,36 1080,0 1440,18 L1440,36 L0,36 Z" className="fill-gray-50 dark:fill-[#0F0F14]" />
+          </svg>
+        </div>
+      </section>
+
+      {/* ── CONTACT INFO CARDS ───────────────────────────────── */}
+      <section className="bg-gray-50 dark:bg-[#0F0F14] py-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {contactInfo.map(({ icon: Icon, label, value, sub, href, color, bg }, i) => {
+              const Wrapper = href ? "a" : "div";
+              return (
+                <Wrapper
+                  key={i}
+                  {...(href ? { href, target: href.startsWith("http") ? "_blank" : undefined, rel: href.startsWith("http") ? "noopener noreferrer" : undefined } : {})}
+                  className="bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl p-5 hover:border-violet-400/40 hover:-translate-y-0.5 transition-all group"
+                  style={{ animation: `fadeSlideUp 0.5s ease ${i * 0.07}s both` }}
+                >
+                  <div className={`w-9 h-9 ${bg} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                    <Icon className={`w-4 h-4 ${color}`} />
+                  </div>
+                  <div className="text-[11px] text-gray-400 dark:text-white/35 font-medium mb-0.5">{label}</div>
+                  <div className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm leading-snug">{value}</div>
+                  <div className="text-[11px] text-gray-400 dark:text-white/35 mt-0.5">{sub}</div>
+                </Wrapper>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ════════════ CONTACT CARDS */}
-      <section className="pb-16">
+      {/* ── FORM + SIDEBAR ───────────────────────────────────── */}
+      <section className="py-14 lg:py-20 bg-white dark:bg-[#0B0B0F]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {contactCards.map(({ icon: Icon, title, primary, href, sub, cta, external }, i) => (
-              <a
+          <div className="grid lg:grid-cols-[1fr_360px] gap-10 items-start">
+
+            {/* ── FORM ──────────────────────────────────────── */}
+            <div>
+              <div className="mb-7">
+                <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mb-1">
+                  Get Your Free{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-indigo-500">
+                    Digital Audit
+                  </span>
+                </h2>
+                <p className="text-gray-400 dark:text-white/40 text-sm">
+                  Fill in your details — we will review and get back within 4 hours.
+                </p>
+              </div>
+
+              {status === "success" ? (
+                /* ── Success State ── */
+                <div className="bg-green-50 dark:bg-green-500/5 border border-green-200 dark:border-green-500/20 rounded-2xl p-8 text-center">
+                  <div className="w-14 h-14 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="w-7 h-7 text-green-500" />
+                  </div>
+                  <h3 className="text-lg font-black text-gray-900 dark:text-white mb-2">
+                    Message Sent Successfully!
+                  </h3>
+                  <p className="text-gray-500 dark:text-white/50 text-sm mb-5 max-w-sm mx-auto">
+                    Thank you for reaching out. Our team will review your details
+                    and contact you within 4 business hours.
+                  </p>
+                  <button
+                    onClick={() => { setStatus("idle"); setForm({ name: "", email: "", phone: "", company: "", service: "", budget: "", message: "" }); }}
+                    className="inline-flex items-center gap-2 text-sm font-bold text-violet-600 dark:text-violet-400 hover:opacity-80 transition-opacity"
+                  >
+                    <ArrowRight className="w-4 h-4" /> Send another message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+
+                  {/* Row 1 */}
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-white/70 mb-1.5">
+                        Full Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="name"
+                        required
+                        value={form.name}
+                        onChange={handleChange}
+                        placeholder="Your full name"
+                        className="w-full bg-gray-50 dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.08] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 focus:outline-none focus:border-violet-500 dark:focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-white/70 mb-1.5">
+                        Phone Number <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        required
+                        value={form.phone}
+                        onChange={handleChange}
+                        placeholder="+91 98765 43210"
+                        className="w-full bg-gray-50 dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.08] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 focus:outline-none focus:border-violet-500 dark:focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 2 */}
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-white/70 mb-1.5">
+                        Email Address <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        value={form.email}
+                        onChange={handleChange}
+                        placeholder="you@company.com"
+                        className="w-full bg-gray-50 dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.08] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 focus:outline-none focus:border-violet-500 dark:focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-white/70 mb-1.5">
+                        Company / Website
+                      </label>
+                      <input
+                        type="text"
+                        name="company"
+                        value={form.company}
+                        onChange={handleChange}
+                        placeholder="yourcompany.com"
+                        className="w-full bg-gray-50 dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.08] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 focus:outline-none focus:border-violet-500 dark:focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Service */}
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 dark:text-white/70 mb-1.5">
+                      Service Interested In <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="service"
+                      required
+                      value={form.service}
+                      onChange={handleChange}
+                      className="w-full bg-gray-50 dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.08] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white focus:outline-none focus:border-violet-500 dark:focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all appearance-none cursor-pointer"
+                    >
+                      <option value="" disabled>Select a service...</option>
+                      {services.map((s, i) => (
+                        <option key={i} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Budget */}
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 dark:text-white/70 mb-1.5">
+                      Monthly Marketing Budget
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                      {budgets.map((b, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => setForm((prev) => ({ ...prev, budget: b }))}
+                          className={cn(
+                            "px-3 py-2.5 rounded-xl text-[11px] font-semibold border transition-all text-center",
+                            form.budget === b
+                              ? "bg-violet-600 border-violet-600 text-white shadow-md shadow-violet-500/20"
+                              : "bg-gray-50 dark:bg-[#13131A] border-gray-200 dark:border-white/[0.08] text-gray-600 dark:text-white/55 hover:border-violet-400/50 hover:text-violet-600 dark:hover:text-violet-400"
+                          )}
+                        >
+                          {b}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 dark:text-white/70 mb-1.5">
+                      Tell Us About Your Goals
+                    </label>
+                    <textarea
+                      name="message"
+                      value={form.message}
+                      onChange={handleChange}
+                      rows={4}
+                      placeholder="What are you trying to achieve? E.g. increase leads, grow e-commerce revenue, improve rankings..."
+                      className="w-full bg-gray-50 dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.08] rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/25 focus:outline-none focus:border-violet-500 dark:focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all resize-none"
+                    />
+                  </div>
+
+                  {/* Error */}
+                  {status === "error" && (
+                    <div className="flex items-center gap-2 text-red-500 text-sm bg-red-50 dark:bg-red-500/5 border border-red-200 dark:border-red-500/20 rounded-xl px-4 py-3">
+                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                      Something went wrong. Please try again or call us directly.
+                    </div>
+                  )}
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-black px-8 py-4 rounded-2xl hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-xl shadow-violet-500/25 text-sm disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  >
+                    {status === "loading" ? (
+                      <>
+                        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        Send Message & Get Free Audit
+                      </>
+                    )}
+                  </button>
+
+                  <p className="text-[11px] text-gray-400 dark:text-white/30">
+                    By submitting this form, you agree to be contacted by our team.
+                    We never share your data with third parties.
+                  </p>
+                </form>
+              )}
+            </div>
+
+            {/* ── SIDEBAR ───────────────────────────────────── */}
+            <div className="lg:sticky lg:top-24 space-y-4">
+
+              {/* What Happens Next */}
+              <div className="bg-gray-50 dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl overflow-hidden">
+                <div className="px-5 py-4 border-b border-gray-100 dark:border-white/[0.05]">
+                  <h3 className="font-black text-gray-900 dark:text-white text-sm">What Happens Next?</h3>
+                </div>
+                <div className="p-5 space-y-4">
+                  {steps.map(({ step, title, desc }, i) => (
+                    <div key={i} className="flex gap-3">
+                      <div className="flex flex-col items-center flex-shrink-0">
+                        <div className="w-7 h-7 bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-lg flex items-center justify-center font-black text-[11px] shadow-sm shadow-violet-500/20">
+                          {step}
+                        </div>
+                        {i < steps.length - 1 && (
+                          <div className="w-px flex-1 bg-gradient-to-b from-violet-400/30 to-transparent mt-1.5 min-h-[12px]" />
+                        )}
+                      </div>
+                      <div className="pt-0.5">
+                        <div className="font-bold text-gray-900 dark:text-white text-xs mb-0.5">{title}</div>
+                        <p className="text-gray-400 dark:text-white/40 text-[11px] leading-relaxed">{desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Direct Contact */}
+              <div className="bg-gradient-to-br from-violet-600 to-indigo-600 rounded-2xl p-5 text-white shadow-xl shadow-violet-500/20">
+                <h3 className="font-black text-sm mb-1">Prefer to Talk Directly?</h3>
+                <p className="text-white/70 text-xs leading-relaxed mb-4">
+                  Skip the form — call or WhatsApp us right now.
+                </p>
+                <div className="space-y-2.5">
+                  <a
+                    href={`tel:${PHONE}`}
+                    className="flex items-center gap-2.5 bg-white/15 hover:bg-white/25 transition-colors rounded-xl px-4 py-3 text-xs font-bold"
+                  >
+                    <Phone className="w-3.5 h-3.5 flex-shrink-0" /> {PHONE_DISP}
+                  </a>
+                  <a
+                    href={`https://wa.me/${PHONE}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2.5 bg-green-500 hover:bg-green-600 transition-colors rounded-xl px-4 py-3 text-xs font-bold"
+                  >
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    WhatsApp Us
+                  </a>
+                  <a
+                    href={`mailto:${EMAIL}`}
+                    className="flex items-center gap-2.5 bg-white/10 hover:bg-white/20 transition-colors rounded-xl px-4 py-3 text-xs font-bold"
+                  >
+                    <Mail className="w-3.5 h-3.5 flex-shrink-0" /> {EMAIL}
+                  </a>
+                </div>
+              </div>
+
+              {/* Office Hours */}
+              <div className="bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl p-5">
+                <h3 className="font-black text-gray-900 dark:text-white text-sm mb-3 flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-violet-500" /> Office Hours
+                </h3>
+                <div className="space-y-2">
+                  {[
+                    { day: "Monday – Friday", hours: "9:00 AM – 7:00 PM", active: true },
+                    { day: "Saturday",        hours: "10:00 AM – 5:00 PM", active: true },
+                    { day: "Sunday",          hours: "Closed", active: false },
+                  ].map(({ day, hours, active }, i) => (
+                    <div key={i} className="flex items-center justify-between text-xs">
+                      <span className="text-gray-600 dark:text-white/60">{day}</span>
+                      <span className={cn(
+                        "font-bold",
+                        active ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-white/30"
+                      )}>
+                        {hours}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/[0.05] flex items-center gap-2">
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0" />
+                  <span className="text-[11px] text-gray-400 dark:text-white/35">Currently available</span>
+                </div>
+              </div>
+
+              {/* Location */}
+              <div className="bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl p-5">
+                <h3 className="font-black text-gray-900 dark:text-white text-sm mb-3 flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-pink-500" /> Location
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-white/50 leading-relaxed mb-3">
+                  Based in Delhi, India. Serving clients across India and internationally with remote-first delivery.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {["Delhi NCR", "Mumbai", "Bangalore", "Pan India", "UK / UAE"].map((loc) => (
+                    <span key={loc} className="text-[11px] font-medium bg-gray-100 dark:bg-white/[0.05] text-gray-500 dark:text-white/40 px-2.5 py-1 rounded-full">
+                      {loc}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQs ─────────────────────────────────────────────── */}
+      <section className="py-14 bg-gray-50 dark:bg-[#0F0F14]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white text-center mb-8">
+            Common Questions
+          </h2>
+          <div className="space-y-3">
+            {faqs.map(({ q, a }, i) => (
+              <details
                 key={i}
-                href={href}
-                target={external ? "_blank" : undefined}
-                rel={external ? "noopener noreferrer" : undefined}
-                className="group bg-[#13131A] border border-white/5 rounded-2xl p-6 hover:border-violet-500/40 hover:-translate-y-1 transition-all duration-300 block"
+                className="group bg-white dark:bg-[#13131A] border border-gray-200 dark:border-white/[0.06] rounded-2xl overflow-hidden"
               >
-                <div className="w-11 h-11 bg-violet-500/10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-violet-500/20 transition-colors">
-                  <Icon className="w-5 h-5 text-violet-400" />
+                <summary className="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-colors list-none">
+                  <span className="text-sm font-semibold text-gray-800 dark:text-white/90 pr-4">{q}</span>
+                  <span className="w-6 h-6 flex-shrink-0 flex items-center justify-center rounded-full border border-gray-200 dark:border-white/[0.1] text-gray-400 group-open:border-violet-500 group-open:text-violet-500 group-open:bg-violet-500/10 transition-all font-bold text-base">
+                    <span className="group-open:hidden">+</span>
+                    <span className="hidden group-open:block">−</span>
+                  </span>
+                </summary>
+                <div className="px-5 pb-5 pt-1 text-gray-500 dark:text-white/50 text-sm leading-relaxed border-t border-gray-100 dark:border-white/[0.05]">
+                  {a}
                 </div>
-                <p className="text-xs font-bold text-white/25 uppercase tracking-widest mb-2">{title}</p>
-                <p className="text-white font-bold text-sm mb-1">{primary}</p>
-                <p className="text-white/35 text-xs mb-4 leading-snug">{sub}</p>
-                <div className="inline-flex items-center gap-1 text-violet-400 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                  {cta} <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </a>
+              </details>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ════════════ MAIN GRID: FORM + SIDEBAR */}
-      <section className="py-16 bg-[#0F0F14]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-3 gap-10">
-
-            {/* ── Form (2 cols) */}
-            <div className="lg:col-span-2">
-              <div className="bg-[#13131A] border border-white/5 rounded-3xl p-8 relative overflow-hidden">
-                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
-                <div className="absolute -top-16 -right-16 w-48 h-48 bg-violet-600/8 rounded-full blur-3xl pointer-events-none" />
-
-                <div className="relative z-10">
-                  <Label text="Free Consultation" />
-                  <h2 className="text-3xl font-black text-white mb-2">
-                    Start with a Free Audit
-                  </h2>
-                  <p className="text-white/40 text-sm mb-8">
-                    Fill in your details — we will review your business and call you back
-                    with a custom strategy within 2 hours.
-                  </p>
-                  <ContactForm />
-                </div>
-              </div>
-
-              {/* Map */}
-              <div className="mt-6 bg-[#13131A] border border-white/5 rounded-2xl overflow-hidden">
-                <div className="flex items-center gap-3 px-6 py-4 border-b border-white/5">
-                  <MapPin className="w-4 h-4 text-violet-400" />
-                  <span className="text-sm font-semibold text-white/70">Our Office — New Delhi</span>
-                </div>
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3499.6!2d77.1025!3d28.7041!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDQyJzE0LjgiTiA3N8KwMDYnMDkuMCJF!5e0!3m2!1sen!2sin!4v1234567890"
-                  width="100%"
-                  height="240"
-                  style={{ border: 0, filter: "invert(90%) hue-rotate(180deg) brightness(0.85) contrast(1.1)" }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-                <div className="px-6 py-4">
-                  <p className="text-white/45 text-xs">
-                    D-7/296, 2nd Floor, Sector-6, Rohini, New Delhi – 110086
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* ── Sidebar */}
-            <div className="space-y-5">
-
-              {/* Quick CTA Card */}
-              <div className="relative bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-6 overflow-hidden">
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-                <div className="relative z-10">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                    <span className="text-white/70 text-xs font-semibold uppercase tracking-wider">Available Now</span>
-                  </div>
-                  <h3 className="text-xl font-black text-white mb-4">
-                    Need Immediate Help?
-                  </h3>
-                  <div className="space-y-3">
-                    <a
-                      href="tel:+917840000618"
-                      className="flex items-center justify-center gap-2 bg-white text-violet-700 font-black py-3 rounded-xl hover:bg-blue-50 transition-colors text-sm w-full"
-                    >
-                      <Phone className="w-4 h-4" /> +91 78400 00618
-                    </a>
-                    <a
-                      href="https://wa.me/917840000618"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 bg-white/15 border border-white/20 text-white font-bold py-3 rounded-xl hover:bg-white/25 transition-colors text-sm w-full"
-                    >
-                      <MessageSquare className="w-4 h-4" /> WhatsApp Us
-                    </a>
-                    <a
-                      href="mailto:info@rigvedaadds.com"
-                      className="flex items-center justify-center gap-2 bg-white/15 border border-white/20 text-white font-bold py-3 rounded-xl hover:bg-white/25 transition-colors text-sm w-full"
-                    >
-                      <Mail className="w-4 h-4" /> info@rigvedaadds.com
-                    </a>
-                  </div>
-                  <p className="text-white/50 text-xs text-center mt-4">
-                    Mon – Sat · 10:00 AM – 7:00 PM IST
-                  </p>
-                </div>
-              </div>
-
-              {/* Why Choose Us */}
-              <div className="bg-[#13131A] border border-white/5 rounded-2xl p-6">
-                <p className="text-xs font-bold text-violet-400 uppercase tracking-widest mb-5">
-                  Why Rigveda Ads?
-                </p>
-                <div className="space-y-4">
-                  {whyUs.map(({ icon: Icon, title, desc }, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <div className="w-8 h-8 bg-violet-500/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <Icon className="w-4 h-4 text-violet-400" />
-                      </div>
-                      <div>
-                        <p className="text-white/80 text-sm font-semibold">{title}</p>
-                        <p className="text-white/35 text-xs mt-0.5 leading-relaxed">{desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Services List */}
-              <div className="bg-[#13131A] border border-white/5 rounded-2xl p-6">
-                <p className="text-xs font-bold text-violet-400 uppercase tracking-widest mb-5">
-                  Our Services
-                </p>
-                <div className="space-y-2.5 mb-5">
-                  {services.map((s, i) => (
-                    <div key={i} className="flex items-center gap-2.5">
-                      <span className="w-1.5 h-1.5 bg-violet-500/60 rounded-full flex-shrink-0" />
-                      <span className="text-white/50 text-sm">{s}</span>
-                    </div>
-                  ))}
-                </div>
-                <Link
-                  href="/services"
-                  className="flex items-center justify-center gap-2 border border-violet-500/30 text-violet-400 hover:bg-violet-500/10 py-2.5 rounded-xl text-sm font-semibold transition-all w-full"
-                >
-                  View All Services <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-
-              {/* Credentials */}
-              <div className="bg-[#13131A] border border-white/5 rounded-2xl p-6">
-                <p className="text-xs font-bold text-violet-400 uppercase tracking-widest mb-5">
-                  Credentials
-                </p>
-                <div className="space-y-3">
-                  {[
-                    "Google Certified Partner",
-                    "8+ Years Experience",
-                    "500+ Campaigns Managed",
-                    "300% Average Client ROI",
-                    "Pan-India + International",
-                  ].map((c, i) => (
-                    <div key={i} className="flex items-center gap-2.5">
-                      <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 flex-shrink-0" />
-                      <span className="text-white/55 text-sm">{c}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
+      {/* ── CTA ──────────────────────────────────────────────── */}
+      <section className="py-14 lg:py-20 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-violet-900/40 to-indigo-900/35" />
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
+          <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
+        </div>
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <h2 className="text-3xl sm:text-4xl font-black text-white mb-3">
+            Ready to{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-indigo-200">
+              See Real Growth?
+            </span>
+          </h2>
+          <p className="text-white/60 text-sm mb-7 max-w-md mx-auto">
+            Join 500+ businesses that trust Rigveda Ads to manage their digital
+            marketing and deliver measurable ROI every month.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-black px-8 py-4 rounded-2xl hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-xl shadow-violet-500/25 text-sm group"
+            >
+              <Zap className="w-4 h-4" />
+              Get Free Audit Now
+            </a>
+            <a
+              href={`tel:${PHONE}`}
+              className="inline-flex items-center justify-center gap-2 border border-white/20 text-white font-bold px-8 py-4 rounded-2xl hover:bg-white/10 transition-all text-sm"
+            >
+              <Phone className="w-4 h-4" /> {PHONE_DISP}
+            </a>
           </div>
         </div>
       </section>
-
-      {/* ════════════ FAQ */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <Label text="FAQ" />
-            <h2 className="text-3xl lg:text-5xl font-black">
-              <span className="text-white">Common </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-300">
-                Questions
-              </span>
-            </h2>
-            <p className="text-white/35 mt-3 max-w-lg mx-auto text-sm">
-              Everything you need to know before getting started.
-            </p>
-          </div>
-
-          <div className="max-w-3xl mx-auto space-y-3">
-            {faqs.map((faq, i) => <FaqItem key={i} {...faq} />)}
-          </div>
-
-          {/* Bottom still have questions */}
-          <div className="mt-14 text-center">
-            <div className="inline-block bg-gradient-to-r from-violet-600/10 to-purple-600/10 border border-violet-500/15 rounded-2xl px-10 py-8">
-              <h3 className="text-xl font-black text-white mb-2">Still Have Questions?</h3>
-              <p className="text-white/40 text-sm mb-6 max-w-sm mx-auto">
-                Our team is just one call away — free consultation, zero obligation.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <a
-                  href="tel:+917840000618"
-                  className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition-all text-sm"
-                >
-                  <Phone className="w-4 h-4" /> Call +91 78400 00618
-                </a>
-                <a
-                  href="https://wa.me/917840000618"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 border border-white/12 text-white font-bold px-8 py-3.5 rounded-xl hover:bg-white/5 transition-all text-sm"
-                >
-                  <MessageSquare className="w-4 h-4" /> WhatsApp
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </div>
+    </>
   );
 }

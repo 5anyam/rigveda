@@ -215,7 +215,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`${inter.variable} font-sans antialiased bg-[#0B0B0F] text-white`}>
+      <body className={`${inter.variable} font-sans antialiased bg-white dark:bg-[#0B0B0F] text-gray-900 dark:text-white`}>
 
         {/* CHANGE 2: Wrap everything in ThemeProvider */}
         <ThemeProvider
